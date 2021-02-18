@@ -1,0 +1,95 @@
+IDRViewer Changelog
+-------------------
+
+1.11.0 (23 Feb 2021)
+- Large internal refactor to improve encapsulation & extensibility
+- Switching to panning mode is no longer prevented in browsers with mobile user agents
+
+1.10.4 (17 Nov 2020)
+- Fix for named zoom values sometimes getting skipped when zooming in and out
+
+1.10.3 (06 Oct 2020)
+- Add workaround for a bug in Safari causing intermittent failure to render SVG pages
+
+1.10.2 (28 Jan 2020)
+- Ignore offset values in GoTo links that escape the page bounds
+
+1.10.1 (14 May 2019)
+- Fix text selection being wrongly cleared on right click when using SVG pages
+
+1.10.0 (02 Apr 2019)
+- Add R2L document support
+- Fix annotations not working when a page is unloaded and later reloaded
+- Fix annotations selection issue on iOS (page jumping)
+
+1.9.0 (20 Feb 2019)
+- Moved to JSON annotations support (removed legacy annotations handling code)
+- Code tidy (created ZoomManager encapsulation for zoom code)
+
+1.8.2 (04 Dec 2018)
+- Updated CSS transform vendor prefixes to add unprefixed variant and remove -o and -moz variants.
+
+1.8.1 (06 Nov 2018)
+- Improve calculation of named zoom values when zooming in and out
+
+1.8.0 (04 Sep 2018)
+- Add named zoom values (e.g. Automatic, Fit Width, etc) to the zoom in and zoom out behavior
+
+1.7.0 (07 Aug 2018)
+- Improve memory management by removing pages from the DOM that are far away from the current page
+- Set panning mode styles using CSS classes instead of directly with JavaScript (updated idrviewer.css)
+- Improve event handling for panning mode
+- Fix for scroll position changing when zooming in long documents
+
+1.6.0 (03 Apr 2018)
+- Add support for svgz pages
+
+1.5.6 (06 Mar 2018)
+- Add functionality to clear all selections on SVG documents when a click is detected outside of the selected page
+
+1.5.5 (05 Dec 2017)
+- Fix even numbered last pages appearing in Magazine layout when flip or fade presentation layout transitions are enabled
+- Fix for pageload event not fired when using SVG pages or fallback iframes
+- Fix for URL value not used when passed in for SVG pages or fallback iframes
+
+1.5.4 (03 Oct 2017)
+- Fix for IE issue where pages do not load from file:// protocol
+
+1.5.3 (01 Aug 2017)
+- Fix text selection in IE/Edge in Presentation and Magazine layouts
+- Ignore negative offset values in GoTo links
+
+1.5.2 (06 June 2017)
+- Fix for links with null zoom value navigating to wrong page in continuous mode
+
+1.5.1 (02 May 2017)
+- Prevent onresize listener from being overridden
+
+1.5.0 (04 Apr 2017)
+- Add support for magazine mode in files where not all pages have the same bounds
+- Catch synchronous exception thrown only by Safari when loading HTML pages from the local filesystem
+- Ensure visible pages remain visible when zooming
+- Remove unused code for old Mobile layout
+- Remove duplicate shared CSS element when loading pages
+
+1.4.1 (07 Mar 2017)
+- Add compatibility with AMD & CommonJS module systems
+
+1.4.0 (07 Feb 2017)
+- Remove jQuery dependency
+- Fix font FOIT (Flash Of Invisible Text) as pages are loaded in
+- Allow pages to be loaded from a specified location
+
+1.3.1 (10 Jan 2017)
+- Add support for bookmarks and goto links with vertical offset
+- Fix 1px white lines appearing on edge of pages
+
+1.3.0 (06 Dec 2016)
+- Fix race condition causing blank pages
+
+1.2.0 (04 Oct 2016)
+- Added public updateLayout function
+- Handle new page container ids
+
+1.1.0 (02 Aug 2016)
+- Version number added

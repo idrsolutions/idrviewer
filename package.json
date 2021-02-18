@@ -1,0 +1,39 @@
+{
+  "name": "idrviewer",
+  "version": "1.11.0",
+  "description": "The IDRViewer is a viewer designed for documents converted using BuildVu",
+  "keywords": [
+    "idrsolutions",
+    "buildvu",
+    "idrviewer",
+    "viewer",
+    "pdf",
+    "document",
+    "html",
+    "html5",
+    "svg",
+    "javascript"
+  ],
+  "homepage": "https://github.com/idrsolutions/idrviewer",
+  "bugs": {
+    "url": "https://github.com/idrsolutions/idrviewer/issues"
+  },
+  "license": "Apache-2.0",
+  "author": "Leon Atherton <leon@idrsolutions.com>",
+  "main": "src/js/idrviewer.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/idrsolutions/idrviewer.git"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/grunt test"
+  },
+  "devDependencies": {
+    "grunt": "^1.3.0",
+    "grunt-cli": "^1.3.2",
+    "grunt-contrib-jshint": "^3.0.0",
+    "grunt-contrib-qunit": "^4.0.0",
+    "grunt-contrib-uglify": "^5.0.0",
+    "qunitjs": "^2.4.0"
+  }
+}

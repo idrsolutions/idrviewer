@@ -1,0 +1,47 @@
+Complete UI Changelog
+---------------------
+
+2.0.0 (17 Nov 2020)
+- Large refactor to improve extensibility and make the code easier to follow
+
+1.7.0 (02 Apr 2019)
+- Added French translations
+- Added R2L document support
+- Fix scope of nav tag too large
+- Fix layout button visible on mobile
+- Store page history in continuous layout
+
+1.6.0 (20 Feb 2019)
+- Added JSON annotations support
+- Added language localization support
+- Updated nav bar and sidebar to use nav HTML tags
+- Code tidy (moved search code into sidebar encapsulation)
+- On mobile the layout/zoom/select buttons are now hidden using CSS rather than removed using JavaScript
+
+1.5.1 (04 Sep 2018)
+- Improved performance of CSS thumbnail loading indicator (only animate when visible)
+- Fix for sidebar thumbnails not loading in rare circumstance when using search shortcut
+
+1.5.0 (07 Aug 2018)
+- Updated sidebar styles to provide a more modern look and feel
+- Replaced gif thumbnail loading indicator with CSS indicator
+
+1.4.1 (06 Feb 2018)
+- Improved sidebar scroll behavior when opening sidebar, switching tabs & changing page
+
+1.4.0 (04 Apr 2017)
+- Add search implementation to sidebar including Ctrl/Cmd + f keyboard shortcut
+- Unfocus dropdowns after used to allow keyboard navigation without extra click
+- Add page navigation using Page Up, Page Down, Home & End keyboard buttons
+
+1.3.0 (07 Feb 2017)
+- Removed jQuery dependency
+
+1.2.0 (10 Jan 2017)
+- Added keyboard arrow key navigation
+- Improved dropdown background color
+- Added support for page labels
+- Added support for bookmarks with vertical offsets
+
+1.1.0 (02 Aug 2016)
+- Version number added
