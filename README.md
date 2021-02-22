@@ -1,6 +1,6 @@
 # IDRViewer - HTML5 Document Viewer for BuildVu
 
-The IDRViewer is a pure HTML/JavaScript/CSS viewer designed to display PDF and Office documents in the browser. It works alongside [BuildVu](https://www.idrsolutions.com) which converts PDF documents to HTML5 or SVG pages.
+The IDRViewer is a pure HTML/JavaScript/CSS viewer designed to display PDF and Office documents in the browser. It works alongside [BuildVu](https://www.idrsolutions.com/buildvu/) which converts PDF documents to HTML5 or SVG pages.
 
 The IDRViewer is the component responsible for loading and displaying the pages in the web browser. It also handles functionality such as zoom, page layouts, and selection mode.
 
