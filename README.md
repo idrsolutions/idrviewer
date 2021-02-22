@@ -7,10 +7,10 @@ The IDRViewer is the component responsible for loading and displaying the pages 
 ## UI Templates
 We also provide a number of user-interfaces that can be used as provided or used as a starting point for building your own user interface.
 
-- Complete UI ([source](blob/master/src/examples/complete/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/complete/))
-- Clean UI ([source](blob/master/src/examples/clean/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/clean/))
-- Simple UI ([source](blob/master/src/examples/simple/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/simple/))
-- Slideshow UI ([source](blob/master/src/examples/slideshow/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/slideshow/))
+- Complete UI ([source](src/examples/complete/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/complete/))
+- Clean UI ([source](src/examples/clean/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/clean/))
+- Simple UI ([source](src/examples/simple/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/simple/))
+- Slideshow UI ([source](src/examples/slideshow/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/slideshow/))
 
 ## Project Structure
 ```
