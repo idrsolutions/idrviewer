@@ -15,8 +15,8 @@ We also provide a number of user-interfaces that can be used as provided or used
 ## Project Structure
 ```
 src/
-   css/        - The CSS required for page display, layouts (Continuous, Magazine and Presentation) and transition effects
-   examples/   - The standard UI templates (Complete, Clean, Simple & Slideshow)
+   css/        - The CSS for page display, layouts (Continuous, Magazine, Presentation) and transition effects
+   examples/   - The standard UI templates (Complete, Clean, Simple, Slideshow)
    js/         - The main codebase (idrviewer.js) and other utilities (annotations, search, etc).
 test/
    document/   - The document used for testing
