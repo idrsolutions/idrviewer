@@ -1,5 +1,10 @@
 Simple UI Changelog
 -------------------
+
+1.8.0 (23 Feb 2021)
+- Moved mobile device detection into this UI (stopped relying on idrviewer.js value)
+- Replaced tabs with spaces
+
 1.7.1 (25 Aug 2020)
 - Fixed zoom buttons doing the opposite to expected
 

@@ -4,6 +4,9 @@ IDRViewer Changelog
 1.11.0 (23 Feb 2021)
 - Large internal refactor to improve encapsulation & extensibility
 - Switching to panning mode is no longer prevented in browsers with mobile user agents
+- Fix incorrect R2L slide transition direction in non-slideshow UIs (idrviewer.css updated)
+- Updated annotations handling to support annotations without an objref value
+- Updated annotations handling to support new experimental TextLink type (used for links that are detected within the page text)
 
 1.10.4 (17 Nov 2020)
 - Fix for named zoom values sometimes getting skipped when zooming in and out
