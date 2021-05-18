@@ -1,6 +1,10 @@
 IDRViewer Changelog
 -------------------
 
+1.12.0 (18 May 2021)
+- Add support for Link annotations with Launch actions via enableLaunchActions config setting
+- Add support for Screen annotations with Rendition actions
+
 1.11.0 (23 Feb 2021)
 - Large internal refactor to improve encapsulation & extensibility
 - Switching to panning mode is no longer prevented in browsers with mobile user agents

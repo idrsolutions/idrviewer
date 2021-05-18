@@ -1,4 +1,4 @@
-/* v1.1.2 */
+/* v1.2.0 */
 (function() {
     "use strict";
 
@@ -6,7 +6,8 @@
         var LoadManager = {},
             preLoadedPages = [],
             annotationsPages,
-            annotationsContainers = [];
+            annotationsContainers = [],
+            config;
 
         (function() {
             var request = new XMLHttpRequest();
@@ -46,11 +47,15 @@
                 if (annotationsPages[i].page === page) {
                     var annotations = annotationsPages[i].annotations;
                     for (var j = 0; j < annotations.length; j++) {
-                        loadFunction(annotationsContainer, annotations[j]);
+                        loadFunction(annotationsContainer, annotations[j], config);
                     }
                 }
             }
         };
+
+        IDRViewer.on("ready", function(data) {
+            config = data;
+        });
 
         IDRViewer.on("pageload", function(data) {
             if (annotationsPages) {
@@ -95,34 +100,34 @@
             }
         };
 
-        ActionHandler.onclick = function(data) {
+        ActionHandler.onclick = function(data, config) {
             for (var i = 0; i < handlers.click.length; i++) {
                 if (data.type === handlers.click[i].type) {
-                    handlers.click[i].handler.onclick.apply(this, [data]);
+                    handlers.click[i].handler.onclick.apply(this, [data, config]);
                 }
             }
         };
 
-        ActionHandler.onmouseover = function(data) {
+        ActionHandler.onmouseover = function(data, config) {
             for (var i = 0; i < handlers.mouseover.length; i++) {
                 if (data.type === handlers.mouseover[i].type) {
-                    handlers.mouseover[i].handler.onmouseover.apply(this, [data]);
+                    handlers.mouseover[i].handler.onmouseover.apply(this, [data, config]);
                 }
             }
         };
 
-        ActionHandler.onmouseout = function(data) {
+        ActionHandler.onmouseout = function(data, config) {
             for (var i = 0; i < handlers.mouseout.length; i++) {
                 if (data.type === handlers.mouseout[i].type) {
-                    handlers.mouseout[i].handler.onmouseout.apply(this, [data]);
+                    handlers.mouseout[i].handler.onmouseout.apply(this, [data, config]);
                 }
             }
         };
 
-        ActionHandler.ontouchstart = function(data) {
+        ActionHandler.ontouchstart = function(data, config) {
             for (var i = 0; i < handlers.touchstart.length; i++) {
                 if (data.type === handlers.touchstart[i].type) {
-                    handlers.touchstart[i].handler.ontouchstart.apply(this, [data]);
+                    handlers.touchstart[i].handler.ontouchstart.apply(this, [data, config]);
                 }
             }
         };
@@ -148,7 +153,7 @@
             }
         };
 
-        LinkActionHandler.onclick = function(data) {
+        LinkActionHandler.onclick = function(data, config) {
             if (data.action) {
                 switch (data.action.type) {
                     case "URI":
@@ -184,6 +189,11 @@
                         }
                         currentSound = new Audio(data.action.sound);
                         currentSound.play();
+                        break;
+                    case "Launch":
+                        if (config.enableLaunchActions) {
+                            window.open("../" + data.action.target, "_blank");
+                        }
                         break;
                 }
 
@@ -316,7 +326,39 @@
     })();
 
     (function() {
-        var createAnnotation = function(container, data) {
+        var ScreenHandler = {};
+
+        ScreenHandler.onmouseover = function() {
+            this.style.cursor = "pointer";
+        };
+
+        ScreenHandler.onclick = function(data) {
+            if (data.action) {
+                var newElement = document.createElement("video");
+                newElement.setAttribute("style", "position: absolute; object-fit: fill; visibility: visible;");
+                newElement.setAttribute("controls", "controls");
+                newElement.style.left = data.bounds[0] + "px";
+                newElement.style.top = data.bounds[1] + "px";
+                newElement.style.width = data.bounds[2] + "px";
+                newElement.style.height = data.bounds[3] + "px";
+                newElement.title = data.type;
+                newElement.dataset.objref = data.objref;
+
+                var src = document.createElement("source");
+                src.setAttribute("src", data.action.media.src);
+                src.setAttribute("type", data.action.media.type);
+                newElement.appendChild(src);
+                this.parentNode.replaceChild(newElement, this);
+
+                newElement.play();
+            }
+        };
+
+        ActionHandler.register(["Screen"], ["click", "mouseover"], ScreenHandler);
+    })();
+
+    (function() {
+        var createAnnotation = function(container, data, config) {
             var annotation = document.createElement("div");
             annotation.setAttribute("style", "position: absolute; visibility: visible; -webkit-user-select: none;");
             annotation.style.left = data.bounds[0] + "px";
@@ -334,16 +376,16 @@
 
             container.appendChild(annotation);
             annotation.addEventListener("click", function() {
-                ActionHandler.onclick.apply(this, [data]);
+                ActionHandler.onclick.apply(this, [data, config]);
             });
             annotation.addEventListener("mouseover", function() {
-                ActionHandler.onmouseover.apply(this, [data]);
+                ActionHandler.onmouseover.apply(this, [data, config]);
             });
             annotation.addEventListener("mouseout", function() {
-                ActionHandler.onmouseout.apply(this, [data]);
+                ActionHandler.onmouseout.apply(this, [data, config]);
             });
             annotation.addEventListener("touchstart", function() {
-                ActionHandler.ontouchstart.apply(this, [data]);
+                ActionHandler.ontouchstart.apply(this, [data, config]);
             });
         };
 
