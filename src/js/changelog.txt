@@ -1,5 +1,7 @@
 IDRViewer Changelog
 -------------------
+1.12.1 (10 Aug 2021)
+- Update IDRViewer developer dependencies to latest versions
 
 1.12.0 (18 May 2021)
 - Add support for Link annotations with Launch actions via enableLaunchActions config setting
