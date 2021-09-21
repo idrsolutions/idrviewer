@@ -1,6 +1,9 @@
 Complete UI Changelog
 ---------------------
 
+2.1.0 (21 Sep 2021)
+- Added search result highlighting
+
 2.0.0 (17 Nov 2020)
 - Large refactor to improve extensibility and make the code easier to follow
 

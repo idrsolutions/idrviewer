@@ -1,4 +1,4 @@
-/* IDRViewer - v1.8.2 */
+/* IDRViewer - v1.12.2 */
 
 /* Layout Styles */
 .page {
@@ -42,6 +42,12 @@
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
     cursor: grabbing;
+}
+
+/* Highlight Style */
+.highlight {
+    color: black;
+    background-color: yellow;
 }
 
 /* Presentation Layout */

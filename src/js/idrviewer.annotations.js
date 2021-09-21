@@ -1,4 +1,4 @@
-/* v1.2.0 */
+/* v1.3.0 */
 (function() {
     "use strict";
 
@@ -334,22 +334,28 @@
 
         ScreenHandler.onclick = function(data) {
             if (data.action) {
-                var newElement = document.createElement("video");
-                newElement.setAttribute("style", "position: absolute; object-fit: fill; visibility: visible;");
+                var newElement = document.createElement(data.action.media.type.substr(0, 5)); // 5 = length of "audio" or "video"
+                newElement.setAttribute("style", "position: absolute; visibility: visible;");
                 newElement.setAttribute("controls", "controls");
                 newElement.style.left = data.bounds[0] + "px";
                 newElement.style.top = data.bounds[1] + "px";
-                newElement.style.width = data.bounds[2] + "px";
-                newElement.style.height = data.bounds[3] + "px";
                 newElement.title = data.type;
                 newElement.dataset.objref = data.objref;
 
-                var src = document.createElement("source");
-                src.setAttribute("src", data.action.media.src);
-                src.setAttribute("type", data.action.media.type);
-                newElement.appendChild(src);
-                this.parentNode.replaceChild(newElement, this);
+                if (data.action.media.type === "video/mp4") {
+                    newElement.style.objectFit = "fill";
+                    newElement.style.width = data.bounds[2] + "px";
+                    newElement.style.height = data.bounds[3] + "px";
 
+                    var src = document.createElement("source");
+                    src.setAttribute("src", data.action.media.src);
+                    src.setAttribute("type", data.action.media.type);
+                    newElement.appendChild(src);
+                } else if (data.action.media.type === "audio/mpeg") {
+                    newElement.setAttribute("src", data.action.media.src);
+                }
+
+                this.parentNode.replaceChild(newElement, this);
                 newElement.play();
             }
         };

@@ -26,7 +26,7 @@ module.exports = function(grunt) {
             options: {
                 mangle: true,
                 compress: true,
-                banner: '/*! IDRViewer - v<%= pkg.version %> | Copyright <%= grunt.template.today("yyyy") %> IDRsolutions */\n'
+                banner: '/*! IDRViewer - v<%= pkg.version %> | Copyright <%= grunt.template.today("yyyy") %> IDRsolutions */'
             },
             dist: {
                 files: {
