@@ -1,4 +1,4 @@
-/* v1.2.0 */
+/* v1.3.0 */
 /*jshint esversion: 6 */
 (function() {
     "use strict";
@@ -31,15 +31,27 @@
     let polling = [];
     let timer;
     let pageHandler;
+    let baseUrl;
+    const isLocal = location.protocol === "file:";
+
+    if (isLocal) {
+        console.log("Search functionality is not available when loading from the file:// protocol.");
+    }
 
     IDRViewer.on("ready", function(data) {
         pageHandler = data.pageType === "html" ? HTMLPageHandler : SVGPageHandler;
+        baseUrl = data.url || "";
     });
 
     IDRViewer.loadSearch = function(loadListener, progressListener) {
         if (!textContent) {
+            if (isLocal) {
+                if (loadListener) { loadListener(false); }
+                return;
+            }
+
             var request = new XMLHttpRequest();
-            request.open('GET', 'search.json', true);
+            request.open('GET', baseUrl + 'search.json', true);
 
             if (progressListener) {
                 request.addEventListener('progress', function(event) {

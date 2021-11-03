@@ -1,6 +1,11 @@
-/* v1.3.0 */
+/* v1.4.0 */
 (function() {
     "use strict";
+
+    if (location.protocol === "file:") {
+        console.log("Annotations functionality is not available when loading from the file:// protocol.");
+        return;
+    }
 
     var LoadManager = (function() {
         var LoadManager = {},
@@ -8,20 +13,6 @@
             annotationsPages,
             annotationsContainers = [],
             config;
-
-        (function() {
-            var request = new XMLHttpRequest();
-            request.open('GET', 'annotations.json', true);
-
-            request.onload = function() {
-                if (request.status >= 200 && request.status < 400) {
-                    annotationsPages = JSON.parse(request.responseText).pages;
-                    initPreloadedPages();
-                }
-            };
-
-            request.send();
-        })();
 
         var initPreloadedPages = function() {
             if (preLoadedPages.length) {
@@ -55,6 +46,19 @@
 
         IDRViewer.on("ready", function(data) {
             config = data;
+            var baseUrl = data.url || "";
+
+            var request = new XMLHttpRequest();
+            request.open('GET', baseUrl + 'annotations.json', true);
+
+            request.onload = function() {
+                if (request.status >= 200 && request.status < 400) {
+                    annotationsPages = JSON.parse(request.responseText).pages;
+                    initPreloadedPages();
+                }
+            };
+
+            request.send();
         });
 
         IDRViewer.on("pageload", function(data) {
@@ -187,7 +191,7 @@
                         if (currentSound) {
                             currentSound.pause();
                         }
-                        currentSound = new Audio(data.action.sound);
+                        currentSound = new Audio((config.url || "") + data.action.sound);
                         currentSound.play();
                         break;
                     case "Launch":
@@ -210,8 +214,15 @@
             this.style.cursor = "pointer";
         };
 
-        FileAttachmentHandler.onclick = function(data) {
-            window.open(data.attachment, "_blank");
+        FileAttachmentHandler.onclick = function(data, config) {
+            var downloadLink = document.createElement("a");
+            downloadLink.href = (config.url || "") + data.attachment;
+            downloadLink.download = data.filename;
+            downloadLink.target = "_blank";
+
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
         };
 
         ActionHandler.register(["FileAttachment"], ["click", "mouseover"], FileAttachmentHandler);
@@ -299,7 +310,7 @@
             this.style.cursor = "pointer";
         };
 
-        RichMediaHandler.onclick = function(data) {
+        RichMediaHandler.onclick = function(data, config) {
             if (data.richmedia.length) {
                 var isVideo = data.richmedia[0].type.startsWith("video");
                 var newElement = document.createElement(isVideo ? "video" : "audio");
@@ -313,7 +324,7 @@
                 newElement.dataset.objref = data.objref;
                 for (var i = 0; i < data.richmedia.length; i++) {
                     var src = document.createElement("source");
-                    src.setAttribute("src", data.richmedia[i].src);
+                    src.setAttribute("src", (config.url || "") + data.richmedia[i].src);
                     src.setAttribute("type", data.richmedia[i].type);
                     newElement.appendChild(src);
                 }
@@ -332,7 +343,7 @@
             this.style.cursor = "pointer";
         };
 
-        ScreenHandler.onclick = function(data) {
+        ScreenHandler.onclick = function(data, config) {
             if (data.action) {
                 var newElement = document.createElement(data.action.media.type.substr(0, 5)); // 5 = length of "audio" or "video"
                 newElement.setAttribute("style", "position: absolute; visibility: visible;");
@@ -348,11 +359,11 @@
                     newElement.style.height = data.bounds[3] + "px";
 
                     var src = document.createElement("source");
-                    src.setAttribute("src", data.action.media.src);
+                    src.setAttribute("src", (config.url || "") + data.action.media.src);
                     src.setAttribute("type", data.action.media.type);
                     newElement.appendChild(src);
                 } else if (data.action.media.type === "audio/mpeg") {
-                    newElement.setAttribute("src", data.action.media.src);
+                    newElement.setAttribute("src", (config.url || "") + data.action.media.src);
                 }
 
                 this.parentNode.replaceChild(newElement, this);

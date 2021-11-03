@@ -117,6 +117,10 @@
                 URL = url;
             }
 
+            if (isLocal && !isSVG) {
+                console.log("Cannot load pages using AJAX over the file:// protocol. Falling back to iframes (some features may not be available).");
+            }
+
             var fontStyleElement = document.createElement('style');
             fontStyleElement.setAttribute('type', 'text/css');
             document.head.appendChild(fontStyleElement);

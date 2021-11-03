@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- v2.1.0 -->
+<!-- v2.2.0 -->
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -221,13 +221,29 @@
             searchInputEle.value = LanguageHelper.getTranslation('search.loading') || 'Loading';
             searchInputEle.disabled = 'disabled';
             searchInputEle.addEventListener('input', doSearch);
+            searchInputEle.addEventListener('keydown', function (event) {
+                switch (event.key) {
+                    case "Esc": // IE/Edge specific value
+                    case "Escape":
+                        if (searchInputEle.value !== "") {
+                            searchInputEle.value = "";
+                            doSearch();
+                        } else {
+                            searchInputEle.blur();
+                            Sidebar.toggleSidebar();
+                        }
+                        break;
+                }
+            });
             matchCaseCheckbox.addEventListener('click', doSearch);
             limitResultsCheckbox.addEventListener('click', doSearch);
 
             document.addEventListener('keydown', function (event) {
-                if (event.keyCode === 70 && (event.ctrlKey || event.metaKey)) {
+                if (event.key === 'f' && (event.ctrlKey || event.metaKey)) {
                     Sidebar.openSidebar();
                     Sidebar.switchTo('search');
+                    searchInputEle.focus();
+                    searchInputEle.select();
                     event.preventDefault();
                 }
             });
@@ -291,6 +307,7 @@
                     searchInputEle.value = (LanguageHelper.getTranslation('search.loading') || 'Loading') + ' (' + percentageLoaded + '%)';
                 };
                 if (!isSearchLoaded) {
+                    isSearchLoaded = true;
                     IDRViewer.loadSearch(loadListener, progressListener);
                 }
                 searchInputEle.focus();
@@ -315,6 +332,7 @@
             imageType,
             pgCount,
             curPg,
+            baseUrl,
             scrollSidebar = true,
             thumbnailTimeout,
             spinnerInterval;
@@ -331,6 +349,7 @@
             curPg = data.page;
             pgCount = data.pagecount;
             imageType = data.thumbnailType;
+            baseUrl = data.url || "";
 
             loadThumbnailFrames(data.bounds);
             // Initialise loaded array
@@ -415,7 +434,7 @@
                         break;
                     }
                     if (curThumb.offsetTop + curThumb.clientHeight > thumbnailPanel.scrollTop) {
-                        curThumb.innerHTML = '<img src="thumbnails/' + (thumbIndex + 1) + '.' + imageType + '" />';
+                        curThumb.innerHTML = '<img src="' + baseUrl + 'thumbnails/' + (thumbIndex + 1) + '.' + imageType + '" />';
                         loadedThumbsArray[thumbIndex] = true;
                     }
                 }
@@ -564,6 +583,9 @@
         };
 
         const keyDownHandler = function (e) {
+            if (document.activeElement != null && document.activeElement.tagName === "INPUT") {
+                return;
+            }
             switch (e.keyCode) {
                 case 33: // Page Up
                     IDRViewer.prev();
@@ -686,6 +708,33 @@
 
             zoomInBtn.addEventListener('click', function (e) { IDRViewer.zoomIn(); e.preventDefault(); });
             zoomOutBtn.addEventListener('click', function (e) { IDRViewer.zoomOut(); e.preventDefault(); });
+
+            document.addEventListener('keydown', function (event) {
+                if (event.ctrlKey || event.metaKey) {
+                    if (event.key === '0') {
+                        IDRViewer.setZoom(IDRViewer.ZOOM_AUTO);
+                        event.preventDefault();
+                    } else if (event.key === '-') {
+                        IDRViewer.zoomOut();
+                        event.preventDefault();
+                    } else if (event.key === '+' || event.key === '=') {
+                        IDRViewer.zoomIn();
+                        event.preventDefault();
+                    }
+                }
+            });
+
+            document.addEventListener('wheel', function (event) {
+                if (event.ctrlKey || event.metaKey) {
+                    if (event.deltaY > 0) {
+                        IDRViewer.zoomOut();
+                        event.preventDefault();
+                    } else if (event.deltaY < 0) {
+                        IDRViewer.zoomIn();
+                        event.preventDefault();
+                    }
+                }
+            }, { passive: false });
 
             zoomBtn.value = IDRViewer.ZOOM_AUTO;
 
@@ -861,7 +910,7 @@
         right: 0;
         position: absolute;
     }
-    
+
     #controls select {
         height: 25px;
         margin-top: 10px;
@@ -887,7 +936,7 @@
     #controls select {
         color: white;
     }
-    
+
     #btnSelect, #btnZoomOut, #btnView {
         margin-left: 20px;
     }

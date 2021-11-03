@@ -1,5 +1,13 @@
 IDRViewer Changelog
 -------------------
+
+1.13.0 (02 Nov 2021)
+- Add console message when loading from the file: protocol to explain that search/annotations functionality will not be available and that HTML pages will fallback to displaying in iframes as browsers do not support AJAX over the file: protocol
+- Update idrviewer.annotations.js and idrviewer.search.js to support loading from external url
+- Update idrviewer.querystring-navigation.js to allow other parameters in the URL
+- Update idrviewer.annotations.js to handle the updated attachments format in annotations.json
+- Update dev dependencies
+
 1.12.2 (21 Sep 2021)
 - Add search result highlighting (to Complete UI)
 - Add support for audio Rendition actions

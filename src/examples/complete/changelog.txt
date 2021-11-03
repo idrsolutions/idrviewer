@@ -1,6 +1,11 @@
 Complete UI Changelog
 ---------------------
 
+2.2.0 (02 Nov 2021)
+- Updated thumbnail sidebar to support loading from external URL
+- Added keyboard and mouse wheel shortcuts for zoom
+- Improved keyboard shortcuts for search
+
 2.1.0 (21 Sep 2021)
 - Added search result highlighting
 
