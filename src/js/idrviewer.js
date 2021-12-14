@@ -333,12 +333,14 @@
 
             for (var i = 1; i <= pgCount; i++) {
                 states[i] = PageStates.UNLOADED; // Initialise states to unloaded
+                pages[i].dataset.state = PageStates.UNLOADED;
             }
         };
 
         var setState = function(page, state) {
             updateStateCounts(states[page], state);
             states[page] = state;
+            pages[page].dataset.state = state;
         };
 
         var updateStateCounts = function(before, after) {

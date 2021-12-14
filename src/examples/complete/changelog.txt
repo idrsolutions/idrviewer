@@ -1,6 +1,9 @@
 Complete UI Changelog
 ---------------------
 
+2.3.0 (14 Dec 2021)
+- Improved the print behavior (now prints the loaded pages)
+
 2.2.0 (02 Nov 2021)
 - Updated thumbnail sidebar to support loading from external URL
 - Added keyboard and mouse wheel shortcuts for zoom

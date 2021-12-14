@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- v2.2.0 -->
+<!-- v2.3.0 -->
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1120,6 +1120,13 @@
         background-color: #ddd;
     }
 
+    /* Print styles */
+    @media print {
+        #controls { display: none; }
+        #idrviewer { overflow: visible; }
+        .page { box-shadow: none; }
+        .page:not([data-state="loaded"]) { display: none; }
+    }
 </style>
 </head>
 <body class="light-theme">

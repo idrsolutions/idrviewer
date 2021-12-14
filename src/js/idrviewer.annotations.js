@@ -1,4 +1,4 @@
-/* v1.4.0 */
+/* v1.5.0 */
 (function() {
     "use strict";
 
@@ -28,7 +28,7 @@
 
             var annotationsContainer = document.createElement("div");
             annotationsContainer.className = "page-inner";
-            annotationsContainer.setAttribute("style", "position: absolute; visibility: hidden;");
+            annotationsContainer.setAttribute("style", "position: absolute; pointer-events: none;");
             annotationsContainer.style.width = pageContainer.style.width;
             annotationsContainer.style.height = pageContainer.style.height;
             pageContainer.appendChild(annotationsContainer);
@@ -139,9 +139,29 @@
         return ActionHandler;
     })();
 
+    var SoundHelper = (function() {
+        var currentSound,
+            currentRef;
+
+        return {
+            play: function(src, ref) {
+                // HTMLAudioElement is not supported in any version of IE
+                var isPlaying = currentSound && !currentSound.ended && !currentSound.paused;
+                if (isPlaying) {
+                    currentSound.pause();
+                    if (ref === currentRef) {
+                        return;
+                    }
+                }
+                currentRef = ref;
+                currentSound = new Audio(src);
+                currentSound.play();
+            }
+        };
+    })();
+
     (function() {
-        var LinkActionHandler = {},
-            currentSound;
+        var LinkActionHandler = {};
 
         var pageCount;
         IDRViewer.on("ready", function(data) {
@@ -187,12 +207,7 @@
                         }
                         break;
                     case "Sound":
-                        // HTMLAudioElement is not supported in any version of IE
-                        if (currentSound) {
-                            currentSound.pause();
-                        }
-                        currentSound = new Audio((config.url || "") + data.action.sound);
-                        currentSound.play();
+                        SoundHelper.play((config.url || "") + data.action.sound, data.objref);
                         break;
                     case "Launch":
                         if (config.enableLaunchActions) {
@@ -205,6 +220,22 @@
         };
 
         ActionHandler.register(["Link", "Widget", "TextLink"], ["click", "mouseover"], LinkActionHandler);
+    })();
+
+    (function() {
+        var SoundHandler = {};
+
+        SoundHandler.onmouseover = function() {
+            this.style.cursor = "pointer";
+        };
+
+        SoundHandler.onclick = function(data, config) {
+            if (data.sound) {
+                SoundHelper.play((config.url || "") + data.sound, data.objref);
+            }
+        };
+
+        ActionHandler.register(["Sound"], ["click", "mouseover"], SoundHandler);
     })();
 
     (function() {
@@ -314,7 +345,7 @@
             if (data.richmedia.length) {
                 var isVideo = data.richmedia[0].type.startsWith("video");
                 var newElement = document.createElement(isVideo ? "video" : "audio");
-                newElement.setAttribute("style", "position: absolute; object-fit: fill; visibility: visible;");
+                newElement.setAttribute("style", "position: absolute; object-fit: fill; pointer-events: auto;");
                 newElement.setAttribute("controls", "controls");
                 newElement.style.left = data.bounds[0] + "px";
                 newElement.style.top = data.bounds[1] + "px";
@@ -346,7 +377,7 @@
         ScreenHandler.onclick = function(data, config) {
             if (data.action) {
                 var newElement = document.createElement(data.action.media.type.substr(0, 5)); // 5 = length of "audio" or "video"
-                newElement.setAttribute("style", "position: absolute; visibility: visible;");
+                newElement.setAttribute("style", "position: absolute; pointer-events: auto;");
                 newElement.setAttribute("controls", "controls");
                 newElement.style.left = data.bounds[0] + "px";
                 newElement.style.top = data.bounds[1] + "px";
@@ -377,7 +408,7 @@
     (function() {
         var createAnnotation = function(container, data, config) {
             var annotation = document.createElement("div");
-            annotation.setAttribute("style", "position: absolute; visibility: visible; -webkit-user-select: none;");
+            annotation.setAttribute("style", "position: absolute; pointer-events: auto; -webkit-user-select: none;");
             annotation.style.left = data.bounds[0] + "px";
             annotation.style.top = data.bounds[1] + "px";
             annotation.style.width = data.bounds[2] + "px";

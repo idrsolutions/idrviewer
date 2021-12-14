@@ -1,6 +1,12 @@
 IDRViewer Changelog
 -------------------
 
+1.14.0 (14 Dec 2021)
+- Add support for the Sound annotation subtype
+- Tweak the implementation of annotations that play sounds to allow the sound to be paused
+- Fix bug in magazine layout where annotations could be incorrectly visible in the space opposite to the first page and the last page in documents with an even page count
+- Improve the print behavior in the Complete UI (now prints the loaded pages)
+
 1.13.0 (02 Nov 2021)
 - Add console message when loading from the file: protocol to explain that search/annotations functionality will not be available and that HTML pages will fallback to displaying in iframes as browsers do not support AJAX over the file: protocol
 - Update idrviewer.annotations.js and idrviewer.search.js to support loading from external url
