@@ -1,6 +1,9 @@
 IDRViewer Changelog
 -------------------
 
+1.14.1 (25 Dec 2022)
+- Fix search result highlighting not working for quotation marks
+
 1.14.0 (14 Dec 2021)
 - Add support for the Sound annotation subtype
 - Tweak the implementation of annotations that play sounds to allow the sound to be paused

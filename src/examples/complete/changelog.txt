@@ -1,6 +1,9 @@
 Complete UI Changelog
 ---------------------
 
+2.4.0 (25 Jan 2022)
+- Improved search snippet appearance (bold search term within snippets)
+
 2.3.0 (14 Dec 2021)
 - Improved the print behavior (now prints the loaded pages)
 

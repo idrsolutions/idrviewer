@@ -1,4 +1,4 @@
-/* v1.3.0 */
+/* v1.4.0 */
 /*jshint esversion: 6 */
 (function() {
     "use strict";
@@ -105,7 +105,7 @@
 
     var resultsLimit;
 
-    IDRViewer.search = function(searchTerm, matchCase, limitOnePerPage) {
+    IDRViewer.search = function(searchTerm, matchCase, limitOnePerPage, decomposeSnippets = false) {
         if (!textContent) {
             throw new Error("Search not loaded. loadSearch() must be called first.");
         }
@@ -125,9 +125,15 @@
                         var snippetStart = index >= SNIPPET_LENGTH ? index - SNIPPET_LENGTH : 0;
                         var snippetEnd = index + searchTerm.length < textContent[i].length - SNIPPET_LENGTH ? index + searchTerm.length + SNIPPET_LENGTH : textContent[i].length;
                         var result = {
-                            page: i + 1,
-                            snippet: (i + 1) + " - " + textContent[i].substr(snippetStart, snippetEnd - snippetStart)
+                            page: i + 1
                         };
+                        if (decomposeSnippets) {
+                            result.preSnippet = textContent[i].substring(snippetStart, index);
+                            result.postSnippet = textContent[i].substring(index + searchTerm.length, snippetEnd);
+                            result.result = textContent[i].substring(index, index + searchTerm.length);
+                        } else {
+                            result.snippet = (i + 1) + " - " + textContent[i].substr(snippetStart, snippetEnd - snippetStart);
+                        }
                         results.push(result);
                     }
                 } while (!limitOnePerPage && index !== -1 && (!resultsLimit || results.length < resultsLimit));
@@ -476,7 +482,7 @@
         };
 
         htmlPageHandler.processSearchTerm = function(text) {
-            return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         };
 
         htmlPageHandler.getRawText = function(textElement) {

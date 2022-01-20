@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- v2.3.0 -->
+<!-- v2.4.0 -->
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -254,6 +254,10 @@
             e.preventDefault();
         };
 
+        const htmlEncode = function(string) {
+            return string.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;');
+        };
+
         const doSearch = function () {
             const resultDiv = document.getElementById('searchResults');
             resultDiv.innerText = '';
@@ -262,7 +266,7 @@
             const matchCase = matchCaseCheckbox.checked;
             const limitOnePerPage = limitResultsCheckbox.checked;
 
-            const results = IDRViewer.search(searchTerm, matchCase, limitOnePerPage);
+            const results = IDRViewer.search(searchTerm, matchCase, limitOnePerPage, true);
 
             resultsCountEle.innerText = String(results.length) + (LanguageHelper.getTranslation('search.results-count') || ' results');
 
@@ -272,7 +276,7 @@
 
                 const link = document.createElement('a');
                 link.href = '?page=' + pg;
-                link.innerText = results[i].snippet;
+                link.innerHTML = pg + " - " + htmlEncode(results[i].preSnippet) + "<b>" + htmlEncode(results[i].result) + "</b>" + htmlEncode(results[i].postSnippet);
                 link.className = 'result';
                 link.dataset.page = pg;
                 link.addEventListener('click', clickHandler);
@@ -1090,6 +1094,10 @@
     }
     #search-panel * {
         color: #333;
+    }
+    #search-panel .searchOption *,
+    #search-panel #searchResults,
+    #search-panel #searchResults a {
         margin: 5px;
     }
     #search-panel #searchInput {
@@ -1105,11 +1113,12 @@
         display: block;
     }
     #search-panel hr {
-        margin-top: 18px;
+        margin: 18px 5px 5px;
     }
     #search-panel #searchResultsCount {
         text-align: center;
         display: block;
+        margin: 5px;
     }
     #search-panel .result {
         text-decoration: none;
