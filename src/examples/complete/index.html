@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- v2.4.0 -->
+<!-- v2.4.1 -->
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -250,7 +250,7 @@
         };
 
         const clickHandler = function (e) {
-            IDRViewer.goToPage(this.dataset.page);
+            IDRViewer.selectSearchResult(parseInt(this.dataset.page), parseInt(this.dataset.index));
             e.preventDefault();
         };
 
@@ -273,12 +273,14 @@
             const docFrag = document.createDocumentFragment();
             for (let i = 0; i < results.length && i < 500; i++) {
                 const pg = results[i].page;
+                const index = results[i].index;
 
                 const link = document.createElement('a');
                 link.href = '?page=' + pg;
                 link.innerHTML = pg + " - " + htmlEncode(results[i].preSnippet) + "<b>" + htmlEncode(results[i].result) + "</b>" + htmlEncode(results[i].postSnippet);
                 link.className = 'result';
                 link.dataset.page = pg;
+                link.dataset.index = index;
                 link.addEventListener('click', clickHandler);
 
                 docFrag.appendChild(link);
@@ -1042,6 +1044,7 @@
     }
     .thumbnail img{
         max-width: 160px;
+        max-height: 100%;
         border-radius: 5px;
         border: 1px solid #bbb;
     }

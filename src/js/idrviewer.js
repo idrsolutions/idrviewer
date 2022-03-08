@@ -1123,7 +1123,7 @@
         var exports = {},
             zoomType = IDR.ZOOM_AUTO,
             lastRulePosition,
-            zoomValues = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4],
+            zoomValues = [0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4],
             namedZoomValues = [IDR.ZOOM_AUTO, IDR.ZOOM_FITPAGE, IDR.ZOOM_FITHEIGHT, IDR.ZOOM_FITWIDTH, IDR.ZOOM_ACTUALSIZE],
             zoomCount = 0,
             styleSheet,
@@ -1161,11 +1161,11 @@
 
             var isMinZoom = false, isMaxZoom = false;
 
-            if (zoom >= 4) {
-                zoom = 4;
+            if (zoom >= zoomValues[zoomValues.length - 1]) {
+                zoom = zoomValues[zoomValues.length - 1];
                 isMaxZoom = true;
-            } else if (zoom <= 0.25) {
-                zoom = 0.25;
+            } else if (zoom <= zoomValues[0]) {
+                zoom = zoomValues[0];
                 isMinZoom = true;
             }
 

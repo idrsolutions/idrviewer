@@ -1,6 +1,9 @@
 Complete UI Changelog
 ---------------------
 
+2.4.1 (08 Mar 2022)
+- Added support for larger thumbnail source dimensions
+
 2.4.0 (25 Jan 2022)
 - Improved search snippet appearance (bold search term within snippets)
 

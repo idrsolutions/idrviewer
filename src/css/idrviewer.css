@@ -50,6 +50,10 @@
     background-color: yellow;
 }
 
+.highlight.selected {
+    background-color: orange;
+}
+
 /* Presentation Layout */
 .layout-presentation .page {
     visibility: hidden;
