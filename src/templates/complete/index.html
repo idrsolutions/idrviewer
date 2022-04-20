@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- v3.0.0 -->
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+<style type="text/css"><%= require('html-loader!../../css/idrviewer.css').default %></style>
+<style type="text/css"><%= require('html-loader!./style.css').default %></style>
+<%= htmlWebpackPlugin.tags.headTags %>
+</head>
+<body class="light-theme">
+    <nav id="sidebar">
+        <div id="sidebar-controls" class="controls">
+            <button id="btnThumbnails" data-lang-title="control.thumbnails" title="Thumbnails" class="btn"><i class="fa fa-picture-o fa-lg" aria-hidden="true"></i></button>
+            <button id="btnBookmarks" data-lang-title="control.bookmarks" title="Bookmarks" class="btn"><i class="fa fa-list-ul fa-lg" aria-hidden="true"></i></button>
+            <button id="btnSearch" data-lang-title="control.search" title="Search" class="btn"><i class="fa fa-search fa-lg" aria-hidden="true"></i></button>
+        </div>
+        <div id="sidebar-content">
+            <div id="thumbnails-panel"></div>
+            <div id="bookmarks-panel"></div>
+            <div id="search-panel">
+                <div class="search-head-wrap">
+                    <div class="search-input-wrap">
+                        <input id="searchInput" data-lang-title="search.search" title="Search" type="text">
+                        <div class="search-count">
+                            <span id="searchHighlightSelected">0</span>
+                            <span id="searchHighlightSep">/</span>
+                            <span id="searchHighlightTotal">0</span>
+                        </div>
+                        <div id="searchNavWrap">
+                            <button id="prevHighlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/></svg></button>
+                            <button id="nextHighlight"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></button>
+                        </div>
+                    </div>
+                    <label class="searchOption"><input type="checkbox" id="cbMatchCase"><span data-lang-text="search.match-case"> Match case</span></label>
+                    <label class="searchOption"><input type="checkbox" id="cbLimitResults"><span data-lang-text="search.limit-results-1"> Limit results 1 per page</span></label>
+                    <hr>
+                </div>
+                <div id="searchResults"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="main">
+        <nav id="controls" class="controls">
+            <div id="controls-left">
+                <button id="btnSideToggle" data-lang-title="control.sidebar" title="Sidebar" class="btn"><i class="fa fa-th fa-lg" aria-hidden="true"></i></button>
+                <button id="btnThemeToggle" data-lang-title="control.theme-toggle" title="Theme Toggle" class="btn"><i class="fa fa-lightbulb-o fa-lg" aria-hidden="true"></i></button>
+            </div>
+
+            <div id="controls-center">
+                <button id="btnPrev" data-lang-title="control.prev" title="Previous Page" class="btn"><i class="fa fa-caret-left fa-2x" aria-hidden="true"></i></button>
+                <select id="btnGo">
+
+                </select>
+                <span id="pgCount"></span>
+                <button id="btnNext" data-lang-title="control.next" title="Next Page" class="btn"><i class="fa fa-caret-right fa-2x" aria-hidden="true"></i></button>
+
+                <button id="btnSelect" data-lang-title="control.select" title="Select" class="btn mobile-hidden"><i class="fa fa-i-cursor fa-lg" aria-hidden="true"></i></button>
+                <button id="btnMove" title="Pan" data-lang-title="control.move" class="btn mobile-hidden"><i class="fa fa-arrows fa-lg" aria-hidden="true"></i></button>
+
+                <button id="btnZoomOut" data-lang-title="control.zoom-out" title="Zoom Out" class="btn mobile-hidden"><i class="fa fa-minus fa-lg" aria-hidden="true"></i></button>
+                <select id="btnZoom" class="mobile-hidden">
+                    <option value="specific">100%</option>
+                    <option data-lang-text="control.actual-size" value="actualsize">Actual Size</option>
+                    <option data-lang-text="control.fit-width" value="fitwidth">Fit Width</option>
+                    <option data-lang-text="control.fit-height" value="fitheight">Fit Height</option>
+                    <option data-lang-text="control.fit-page" value="fitpage">Fit Page</option>
+                    <option data-lang-text="control.auto" value="auto">Automatic</option>
+                </select>
+                <button id="btnZoomIn" data-lang-title="control.zoom-in" title="Zoom In" class="btn mobile-hidden"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                <select id="btnView" class="mobile-hidden">
+
+                </select>
+            </div>
+            <div id="controls-right">
+                <button id="btnFullScreen" data-lang-title="control.fullscreen" title="Fullscreen" class="btn"><i class="fa fa-arrows-alt fa-lg" aria-hidden="true"></i></button>
+            </div>
+        </nav>
+
+        <div id="idrviewer">
+
+        </div>
+    </div>
+    <script src="config.js" type="text/javascript"></script>
+    <script type="text/javascript">IDRViewer.setup();</script>
+</body>
+</html>

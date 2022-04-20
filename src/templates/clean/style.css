@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.btn {
+    border: 0 none;
+    height: 30px;
+    padding: 0;
+    width: 30px;
+    background-color: transparent;
+    display: inline-block;
+    margin: 7px 5px 0;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.page {
+    box-shadow: 1px 1px 4px rgba(120, 120, 120, 0.5);
+}
+
+#controls {
+    height: 44px;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    transition: 0.3s ease 0s;
+}
+
+#controls span {
+    line-height: 44px;
+}
+
+#controls-left {
+    display: inline-block;
+    left: 0;
+    position: absolute;
+}
+#controls-center {
+    display: inline-block;
+}
+#controls-right {
+    display: inline-block;
+    right: 0;
+    position: absolute;
+}
+
+#btnPage {
+    font-family: Arial, sans-serif;
+    width: 40px;
+}
+#title {
+    font-family: Arial, sans-serif;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+.light-theme #idrviewer {
+    background: #fafafa none repeat scroll 0 0;
+}
+.light-theme #controls {
+    background: #9eacba none repeat scroll 0 0;
+    border-bottom: 1px solid #7b8793;
+}
+.light-theme #title,
+.light-theme #btnPage,
+.light-theme .btn{
+    color: white;
+    text-shadow: 0 0 1px #595959;
+}
+.light-theme .btn:hover {
+    opacity: 0.6;
+}
+.light-theme .btn.disabled {
+    opacity: 0.4;
+}
+
+.dark-theme #idrviewer {
+    background: #666 none repeat scroll 0 0;
+}
+.dark-theme #controls {
+    background: #444 none repeat scroll 0 0;
+    border-bottom: 1px solid #000;
+}
+.dark-theme #title,
+.dark-theme #btnPage {
+    color: white;
+    opacity: 0.8;
+}
+.dark-theme .btn {
+    opacity: 0.7;
+    color: white;
+}
+.dark-theme .btn:hover {
+    opacity: 0.95;
+}
+
+.dark-theme .btn.disabled {
+    opacity: 0.2;
+}
+
+@media screen and (max-width: 480px) {
+    #title {
+        display: none;
+    }
+}
+
+#idrviewer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    top: 45px;
+}

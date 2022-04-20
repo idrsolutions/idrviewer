@@ -1,0 +1,374 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Viewer panel */
+#idrviewer {
+    top: 45px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+}
+.light-theme #idrviewer {
+    background: #fafafa none repeat scroll 0 0;
+}
+.dark-theme #idrviewer {
+    background: #666 none repeat scroll 0 0;
+}
+.page {
+    box-shadow: 1px 1px 4px rgba(120, 120, 120, 0.5);
+}
+
+/* Shared utilities */
+.is-mobile .mobile-hidden {
+    display: none;
+}
+.hidden {
+    display: none;
+}
+
+/* Menu bars */
+#controls {
+    height: 44px;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    transition: 0.3s ease 0s;
+}
+#controls-left {
+    display: inline-block;
+    left: 0;
+    position: absolute;
+}
+#controls-center {
+    display: inline-block;
+}
+#controls-right {
+    display: inline-block;
+    right: 0;
+    position: absolute;
+}
+
+#controls select {
+    height: 25px;
+    margin-top: 10px;
+}
+.btn {
+    border: 0 none;
+    height: 30px;
+    padding: 0;
+    width: 30px;
+    background-color: transparent;
+    display: inline-block;
+    margin: 7px 5px 0;
+    vertical-align: top;
+    cursor: pointer;
+}
+#pgCount {
+    font-family: Arial,serif;
+    vertical-align: middle;
+    font-size: 15px;
+}
+#pgCount,
+.btn,
+#controls select {
+    color: white;
+}
+
+#btnSelect, #btnZoomOut, #btnView {
+    margin-left: 20px;
+}
+#btnGo {
+    width: 55px;
+}
+#btnView {
+    width: 105px;
+}
+#btnZoom {
+    width: 95px;
+}
+
+.light-theme .controls {
+    background: #9eacba none repeat scroll 0 0;
+    border-bottom: 1px solid #7b8793;
+}
+.dark-theme .controls {
+    background: #444 none repeat scroll 0 0;
+    border-bottom: 1px solid #000;
+}
+.light-theme #pgCount,
+.light-theme .btn {
+    text-shadow: 0 0 1px #595959;
+}
+.dark-theme #pgCount {
+    opacity: 0.8;
+}
+.dark-theme .btn {
+    opacity: 0.7;
+}
+.light-theme .btn:hover {
+    opacity: 0.6;
+}
+.dark-theme .btn:hover {
+    opacity: 0.95;
+}
+.light-theme .btn.disabled {
+    opacity: 0.4;
+}
+.dark-theme .btn.disabled {
+    opacity: 0.2;
+}
+.light-theme #controls select {
+    background-color: #9aa8b6;
+    border: 1px solid #7b8793;
+}
+.dark-theme #controls select {
+    background-color: #656565;
+    border: 1px solid #000;
+}
+
+/* Sidebar */
+#sidebar {
+    transition-timing-function: ease;
+    transition-duration: 200ms;
+    top: 45px;
+    bottom: 0;
+    position: absolute;
+    overflow: hidden;
+    z-index: 999;
+    left: -350px;
+    width: 350px;
+}
+#sidebar.open {
+    left: 0;
+}
+#sidebar-controls {
+    height: 44px;
+    display: block;
+}
+#sidebar-content {
+    top: 45px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    background-color: #eee;
+}
+#sidebar-content>div {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+}
+.light-theme #sidebar {
+    border-right: 1px solid #7b8793;
+}
+.dark-theme #sidebar {
+    border-right: 1px solid #000;
+}
+
+/* Thumbnails panel */
+.thumbnail {
+    cursor: pointer;
+    display: block;
+    padding: 8px 0;
+    margin: 0 auto;
+    text-align: center;
+}
+.thumbnail img{
+    max-width: 160px;
+    max-height: 100%;
+    border-radius: 5px;
+    border: 1px solid #bbb;
+}
+.currentPageThumbnail, .thumbnail:hover {
+    background-color: #ddd;
+}
+.currentPageThumbnail img, .thumbnail:hover img {
+    border: 1px solid #999;
+}
+.spinner {
+    border: 6px solid #bbb;
+    border-top: 6px solid #3c9fe1;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+}
+.spinning {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Bookmarks panel */
+#bookmarks-panel .bookmark-container {
+    padding: 0;
+    margin: 5px 0;
+    font-family: Arial,serif;
+    font-size: 15px;
+}
+#bookmarks-panel .bookmark-container .bookmark-item {
+    margin: 0 5px 0 20px;
+    position: relative;
+}
+#bookmarks-panel .bookmark-container .bookmark-item.parent > .toggle {
+    display: list-item;
+    position: absolute;
+    left: -18px;
+    border-radius: 4px;
+
+    /* To centre the list marker inside this element, as it has an unchangeable 6px right margin, we'll compensate
+    by setting a 6px left padding in here */
+    padding-left: 6px;
+    width: fit-content;
+
+    list-style-position: inside;
+    list-style-type: disclosure-closed;
+
+    /* Needed to align the marker vertically with the text */
+    line-height: 1.7;
+
+    cursor: pointer;
+}
+
+#bookmarks-panel .bookmark-container .bookmark-item.parent.open > .toggle {
+    list-style-type: disclosure-open;
+}
+#bookmarks-panel .bookmark-container .bookmark-item.parent .bookmark-container {
+    display: none;
+}
+#bookmarks-panel .bookmark-container .bookmark-item.parent.open > .bookmark-container {
+    display: initial;
+}
+#bookmarks-panel .bookmark-container .bookmark-item a {
+    border-radius: 4px;
+    padding: 5px;
+    display: list-item;
+    list-style-type: none;
+    color: #333;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+#bookmarks-panel .bookmark-container .bookmark-item .toggle:hover,
+#bookmarks-panel .bookmark-container .bookmark-item a:hover {
+    background-color: #ddd;
+}
+
+/* Search panel */
+#search-panel {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+#search-panel * {
+    color: #333;
+}
+#search-panel .searchOption *,
+#search-panel #searchResults,
+#search-panel #searchResults a {
+    margin: 5px;
+}
+#search-panel .search-head-wrap {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+
+    background-color: #eee;
+}
+#search-panel .search-head-wrap .search-input-wrap {
+    display: flex;
+    align-items: center;
+
+    width: 288px;
+    height: 30px;
+    margin: 20px auto 10px;
+    border-radius: 5px;
+    border: 1px solid #666;
+
+    color: black;
+    background-color: white;
+}
+#search-panel .search-head-wrap .search-input-wrap #searchInput {
+    display: block;
+    flex-grow: 1;
+    padding: 5px;
+    min-width: 0;
+
+    border: unset;
+    background-color: unset;
+}
+#search-panel .search-head-wrap .search-input-wrap #searchInput:focus-visible {
+    border: unset;
+    outline: unset;
+}
+#search-panel .search-head-wrap .search-input-wrap .search-count {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    margin-right: 5px;
+
+    cursor: default;
+    user-select: none;
+
+    font-size: 15px;
+}
+#search-panel .search-head-wrap .search-input-wrap #searchNavWrap {
+    display: contents;
+    height: 100%;
+}
+#search-panel .search-head-wrap .search-input-wrap #searchNavWrap button {
+    width: auto;
+    height: 100%;
+
+    padding: unset;
+
+    background-color: unset;
+    border: unset;
+}
+#search-panel .search-head-wrap .search-input-wrap #searchNavWrap button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+#search-panel .search-head-wrap .search-input-wrap #searchNavWrap button:disabled {
+    cursor: default;
+    fill: #666666;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+#search-panel .search-head-wrap .search-input-wrap #searchNavWrap button:disabled:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+#search-panel .search-head-wrap .search-input-wrap #searchNavWrap button svg {
+    width: auto;
+    height: 100%;
+
+    flex: none;
+}
+#search-panel .search-head-wrap .searchOption {
+    margin: 0 20px;
+    display: block;
+}
+#search-panel hr {
+    margin: 18px 5px 0;
+}
+#search-panel .result {
+    text-decoration: none;
+    display: block;
+    word-wrap: break-word;
+}
+#search-panel .result:hover {
+    background-color: #ddd;
+}
+
+/* Print styles */
+@media print {
+    #controls { display: none; }
+    #idrviewer { overflow: visible; }
+    .page { box-shadow: none; }
+    .page:not([data-state="loaded"]) { display: none; }
+}

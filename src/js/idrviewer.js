@@ -1418,7 +1418,8 @@
         });
     } else if(typeof module === "object" && module.exports) {
         module.exports = IDR;
-    } else {
+    }
+    if (window) {
         window.IDRViewer = IDR;
     }
 

@@ -7,21 +7,21 @@ The IDRViewer is the component responsible for loading and displaying the pages 
 ## UI Templates
 We also provide a number of user-interfaces that can be used as provided or used as a starting point for building your own user interface.
 
-- Complete UI ([source](src/examples/complete/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/complete/))
-- Clean UI ([source](src/examples/clean/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/clean/))
-- Simple UI ([source](src/examples/simple/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/simple/))
-- Slideshow UI ([source](src/examples/slideshow/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/slideshow/))
+- Complete UI ([source](examples/complete/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/complete/))
+- Clean UI ([source](examples/clean/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/clean/))
+- Simple UI ([source](examples/simple/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/simple/))
+- Slideshow UI ([source](examples/slideshow/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/slideshow/))
 
 ## Project Structure
 ```
+examples/      - The built UI templates (Complete, Clean, Simple, Slideshow)
 src/
    css/        - The CSS for page display, layouts (Continuous, Magazine, Presentation) and transition effects
-   examples/   - The standard UI templates (Complete, Clean, Simple, Slideshow)
-   js/         - The main codebase (idrviewer.js) and other utilities (annotations, search, etc).
-test/
-   document/   - The document used for testing
-   js/         - Qunit tests
-
+   js/         - The main codebase (idrviewer.js) and other utilities (annotations, search, etc)
+   templates/  - The UI templates that are compiled into a single index.html file with webpack
+   test/
+      document/   - The document used for testing
+      js/         - Playwright tests
 ```
 
 ## External IDRViewer API
@@ -33,16 +33,15 @@ See [Annotations JSON API](https://support.idrsolutions.com/buildvu/api-document
 ## Grunt Tasks
 1. Install [node.js](https://nodejs.org/)
 2. Open terminal/command prompt & cd into idrviewer
-3. Run `npm install -g grunt-cli`
-4. Run `npm install`
-5. To run grunt tasks, run `grunt <taskname>` where `<taskname>` is one of the following:
-    - `jshint` is for running static analysis on the JavaScript files.
-    - `uglify` is for minifying the idrviewer.js file to idrviewer.min.js
-    - `qunit` is for running the automated IDRViewer tests (in /src/test/)
+3. Run `npm install`
+4. To run the tasks, run `npm run <taskname>` where `<taskname>` is one of the following:
+   - 'jshint' is for running static analysis on the JavaScript files.
+   - 'playwright' is for running the automated IDRViewer tests (in /src/test/)
+   - 'webpack' is for building the UI templates to /examples/
 
 ## License
 
-Copyright 2021 IDRsolutions
+Copyright 2022 IDRsolutions
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

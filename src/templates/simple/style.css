@@ -1,0 +1,74 @@
+#controls.hide {
+    opacity: 0;
+}
+
+.btn {
+    border: 0 none;
+    height: 30px;
+    padding: 0;
+    width: 30px;
+    background-color: transparent;
+    display: inline-block;
+    margin: 7px 5px 0;
+    vertical-align: top;
+    opacity: 0.6;
+    cursor: pointer;
+    color: #fff;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn.disabled {
+    opacity: 0.2;
+}
+
+#btnPage {
+    color: white;
+    font-family: Arial, sans-serif;
+    width: 40px;
+    opacity: 0.8;
+}
+
+.page {
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+#controls {
+    background: rgba(50, 50, 50, 0.9) none repeat scroll 0 0;
+    height: 44px;
+    line-height: 44px;
+    position: fixed;
+    text-align: center;
+    bottom: 50px;
+    transition: 0.3s ease 0s;
+    width: 230px;
+    left: 50%;
+    margin-left: -115px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
+}
+#controls-left {
+    display: inline-block;
+    left: 0;
+    position: absolute;
+}
+#controls-center {
+    display: inline-block;
+}
+#controls-right {
+    display: inline-block;
+    right: 0;
+    position: absolute;
+    line-height: 34px;
+}
+
+#idrviewer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    top: 0;
+    background: #666 none repeat scroll 0 0;
+}

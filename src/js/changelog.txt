@@ -1,6 +1,14 @@
 IDRViewer Changelog
 -------------------
 
+1.16.0 (19 Apr 2022)
+- Migrated from QUnit to Playwright for testing
+- Dropped Grunt usage in favor of npm scripts
+- Updated idrviewer.search.js to add support for navigating between search result highlights
+- Updated idrviewer.annotations.js to use <a> tags for URI Link annotations
+- Updated UI templates to be fully self-contained and built using webpack
+- Dropped support for Internet Explorer 11
+
 1.15.0 (08 Mar 2022)
 - Update idrviewer.search.js to support search result selection and improve support for ligatures
 - Reduce the minimum zoom level to prevent page overflow on smaller devices

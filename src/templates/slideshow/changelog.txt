@@ -1,0 +1,25 @@
+SlideShow UI Changelog
+----------------------
+
+2.0.0 (19 Apr 2022)
+- Migrated to fully self-contained UI template built using webpack
+- Updated to IDRViewer 1.16.0
+
+1.5.0 (23 Feb 2021)
+- Moved R2L slide transition CSS out of index.html and into idrviewer.css
+
+1.4.0 (02 Apr 2019)
+- Added R2L document support
+- Store page history in continuous layout
+
+1.3.0 (20 Feb 2019)
+- Added JSON annotations support
+
+1.2.0 (04 Apr 2017)
+- Add page navigation using Page Up, Page Down, Home & End keyboard buttons
+
+1.1.0 (07 Feb 2017)
+- Removed jQuery dependency
+
+1.0.0 (10 Jan 2017)
+- Initial release

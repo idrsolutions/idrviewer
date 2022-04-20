@@ -1,4 +1,3 @@
-/* v1.1.0 */
 (function() {
     "use strict";
 

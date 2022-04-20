@@ -1,73 +1,27 @@
-/* v1.5.0 */
 /*jshint esversion: 6 */
 (function() {
     "use strict";
 
-    // ES6 fill in functions
-    function arrayFind(arr, callback) {
-        for (let i = 0; i < arr.length; i++) {
-            let match = callback(arr[i]);
-            if (match) {
-                return arr[i];
-            }
-        }
-    }
-
-    function arrayIncludes(arr, element) {
-        return arr.indexOf(element) >= 0;
-    }
-
-    function nodeListToArray(nodeList) {
-        const theArray = [];
-        for (let i = 0; i < nodeList.length; i++) {
-            theArray.push(nodeList[i]);
-        }
-        return theArray;
-    }
-
-    function stringPad(string, targetLength, padString) {
-        let pad = "";
-
-        for (let i = 0; i < (targetLength - string.length) / padString.length; i++) {
-            pad += padString;
-        }
-
-        return pad + string;
-    }
-
-    function getPageNumberFromId(pageId) {
-        return parseInt(pageId.substring(4));
-    }
-
     let textContent;
-    let searchSettings;
-    let curPg;
-    let polling = [];
-    let timer;
-    let pageHandler;
     let baseUrl;
-    let matches = {};
-    let selectedMatch = null;
     const isLocal = location.protocol === "file:";
+
+    let results;
+    let selectedResult = -1;
+
+    let curPg;
 
     if (isLocal) {
         console.log("Search functionality is not available when loading from the file:// protocol.");
     }
 
+
     IDRViewer.on("ready", function(data) {
-        pageHandler = data.pageType === "html" ? HTMLPageHandler : SVGPageHandler;
         baseUrl = data.url || "";
         curPg = data.page;
     });
 
-    IDRViewer.on("pageunload", function(data) {
-        delete matches[data.page];
-        if (selectedMatch && selectedMatch.page === data.page) {
-            clearSelectedMatch();
-        }
-    });
-
-    IDRViewer.on("pagechange", function(data) {
+    IDRViewer.on("pagechange", data => {
         curPg = data.page;
     });
 
@@ -92,37 +46,8 @@
             request.onload = function() {
                 if (request.status >= 200 && request.status < 400) {
                     textContent = JSON.parse(request.responseText);
-                    IDRViewer.on("pageload", function(page) {
-                        if (matches.hasOwnProperty(page.page)) {
-                            findSearchTermsInPage(document.querySelector("#page" + page.page));
 
-                            if (selectedMatch && selectedMatch.page === page.page) {
-                                matches[page.page].pageHandler.setMatchDescriptorSelected(selectedMatch.index, true);
-                            }
-                        }
-                    });
-
-                    // Setup the polling logic for unloaded SVG Documents
-                    if (pageHandler === SVGPageHandler) {
-                        setInterval(function() {
-                            if (polling.length > 0) {
-                                // Only deal with one page per .5 seconds for performance reasons, more can likely be used to increase snappiness, a shorter interval is also an option
-                                let page = polling.shift();
-
-                                if (page) {
-                                    if (page.querySelector("object").contentDocument.querySelector("text").getComputedTextLength() !== 0) {
-                                        findSearchTermsInPage(page);
-
-                                        if (selectedMatch && selectedMatch.page === page.page) {
-                                            matches[page.page].pageHandler.setMatchDescriptorSelected(selectedMatch.index, true);
-                                        }
-                                    } else {
-                                        polling.push(page);
-                                    }
-                                }
-                            }
-                        }, 500);
-                    }
+                    IDRViewer.fire("searchready", {});
                 }
                 if (loadListener) { loadListener(!!textContent); }
             };
@@ -143,16 +68,13 @@
 
     var resultsLimit;
 
-    IDRViewer.search = function(searchTerm, matchCase, limitOnePerPage) {
-        const decomposeSnippets = arguments[3] || false;
+    IDRViewer.search = function(searchTerm, matchCase, limitOnePerPage, decomposeSnippets = false) {
         if (!textContent) {
             throw new Error("Search not loaded. loadSearch() must be called first.");
         }
 
-        clearSelectedMatch();
-        matches = {};
-
-        var results = [];
+        results = [];
+        selectedResult = -1;
         if (textContent && searchTerm) {
             searchTerm = matchCase ? searchTerm : searchTerm.toUpperCase();
 
@@ -179,24 +101,156 @@
                             result.snippet = (i + 1) + " - " + textContent[i].substr(snippetStart, snippetEnd - snippetStart);
                         }
                         results.push(result);
-
-                        if (matches.hasOwnProperty((i + 1))) matches[(i + 1)].count++;
-                        else matches[(i + 1)] = {
-                            count: 1,
-                            pageHandler: null
-                        };
                     }
                 } while (!limitOnePerPage && index !== -1 && (!resultsLimit || results.length < resultsLimit));
             }
         }
 
+        IDRViewer.fire("search", {
+            searchTerm,
+            results,
+            settings: {
+                matchCase,
+                limitOnePerPage,
+                decomposeSnippets
+            }
+        });
+
+        return results;
+    };
+
+    IDRViewer.nextSearchResult = function() {
+        const result = selectedResult >= 0 ?
+            results[(selectedResult + 1) % results.length] :
+            results.find(result => result.page >= curPg);
+
+        if (!result) {
+            console.warn("Failed to find next search result");
+            return;
+        }
+
+        IDRViewer.selectSearchResult(result.page, result.index);
+    };
+
+    IDRViewer.prevSearchResult = function() {
+        const result = selectedResult >= 0 ?
+            results[(selectedResult - 1) >= 0 ? (selectedResult - 1) : results.length - 1] :
+            results.reduce((finalResult, result) => {
+                return result.page <= curPg ? result : finalResult;
+            });
+
+        if (!result) {
+            console.warn("Failed to find previous search result");
+            return;
+        }
+
+        IDRViewer.selectSearchResult(result.page, result.index);
+    };
+
+    IDRViewer.selectSearchResult = function(page, index) {
+        if (!results) {
+            console.warn("There isn't currently a search");
+            return;
+        }
+
+        const resultIndex = results.findIndex(result => result.page === page && result.index === index);
+
+        if (resultIndex === -1) {
+            console.warn("That isn't a valid search result");
+            return;
+        }
+
+        selectedResult = resultIndex;
+        IDRViewer.goToPage(page);
+
+        IDRViewer.fire("searchresultselected", {
+            resultIndex,
+            result: results[resultIndex]
+        });
+    };
+})();
+
+// Highlighting
+(function() {
+    "use strict";
+
+    let pageHandler;
+
+    let searchSettings;
+
+    let matches = {};
+    let selectedMatch = null;
+
+    let polling = [];
+    let timer;
+
+    function getPageNumberFromId(pageId) {
+        return parseInt(pageId.substring(4));
+    }
+
+    IDRViewer.on("ready", data => {
+        pageHandler = data.pageType === "html" ? HTMLPageHandler : SVGPageHandler;
+    });
+
+    IDRViewer.on("pageunload", data => {
+        delete matches[data.page];
+        if (selectedMatch && selectedMatch.page === data.page) {
+            clearSelectedMatch();
+        }
+    });
+
+    IDRViewer.on("searchready", () => {
+        IDRViewer.on("pageload", function(page) {
+            if (matches.hasOwnProperty(page.page)) {
+                findSearchTermsInPage(document.querySelector("#page" + page.page));
+
+                if (selectedMatch && selectedMatch.page === page.page) {
+                    matches[page.page].pageHandler.setMatchDescriptorSelected(selectedMatch.index, true);
+                }
+            }
+        });
+
+        // Setup the polling logic for unloaded SVG Documents
+        if (pageHandler === SVGPageHandler) {
+            setInterval(function() {
+                if (polling.length > 0) {
+                    // Only deal with one page per .5 seconds for performance reasons, more can likely be used to increase snappiness, a shorter interval is also an option
+                    let page = polling.shift();
+
+                    if (page) {
+                        if (page.querySelector("object").contentDocument.querySelector("text").getComputedTextLength() !== 0) {
+                            findSearchTermsInPage(page);
+
+                            if (selectedMatch && selectedMatch.page === page.page) {
+                                matches[page.page].pageHandler.setMatchDescriptorSelected(selectedMatch.index, true);
+                            }
+                        } else {
+                            polling.push(page);
+                        }
+                    }
+                }
+            }, 500);
+        }
+    });
+
+    IDRViewer.on("search", data => {
+        clearSelectedMatch();
+        matches = data.results.reduce((acc, result) => {
+            if (acc.hasOwnProperty(result.page)) acc[result.page].count++;
+            else acc[result.page] = {
+                count: 1,
+                pageHandler: null
+            };
+            return acc;
+        }, {});
+
         // Debouncing, this will wait 300ms before performing a search and reset the timer every time a character is input to prevent lag while the user is typing a search string
         clearTimeout(timer);
         timer = setTimeout(function() {
             searchSettings = {
-                "searchTerm": searchTerm,
-                "matchCase": matchCase,
-                "limitOnePerPage": limitOnePerPage
+                "searchTerm": data.searchTerm,
+                "matchCase": data.settings.matchCase,
+                "limitOnePerPage": data.settings.limitOnePerPage
             };
 
             let pages = document.getElementsByClassName("page");
@@ -208,46 +262,7 @@
                 }
             }
         }, 300);
-
-        return results;
-    };
-
-    IDRViewer.selectSearchResult = function(page, index) {
-        if (!Object.keys(matches)) {
-            console.warn("There isn't currently a search");
-            return;
-        }
-
-        const match = matches[page];
-
-        if (match === undefined) {
-            console.error("That page doesn't have any results on it");
-            return;
-        } else if (match.count <= index) {
-            console.error("There aren't that many results on that page");
-            return;
-        }
-
-        if (selectedMatch) {
-            const oldPageHandler = matches[selectedMatch.page].pageHandler;
-            oldPageHandler.setMatchDescriptorSelected(selectedMatch.index, false);
-        }
-
-        selectedMatch = {page:page,index:index};
-        if (match.pageHandler) match.pageHandler.setMatchDescriptorSelected(index, true);
-
-        IDRViewer.goToPage(page);
-    };
-
-    function clearSelectedMatch() {
-        if (Object.keys(matches) && selectedMatch) {
-            const match = matches[selectedMatch.page];
-            if (match)
-                match.pageHandler.setMatchDescriptorSelected(selectedMatch.index, false);
-        }
-
-        selectedMatch = null;
-    }
+    });
 
     function getEmptyMatchDescriber() {
         return {
@@ -278,9 +293,9 @@
             return;
         }
 
-        // If the file is an svg and the svg hasn't loaded then add it to the polling list
+        // If the file is a svg and the svg hasn't loaded then add it to the polling list
         if (pageHandler === SVGPageHandler && textElements[0].getComputedTextLength() === 0) {
-            if (!arrayIncludes(polling, page)) polling.push(page);
+            if (!polling.includes(page)) polling.push(page);
             return;
         }
 
@@ -294,36 +309,30 @@
         search.searchTerm = handler.processSearchTerm(search.searchTerm);
 
         // Search for content that matches the search term
-        for (let elementIndex = 0; elementIndex < textElements.length; elementIndex++) {
-            const textElement = textElements[elementIndex];
-            const mappings = textElement.getAttribute("data-mappings") !== null ? JSON.parse(textElement.getAttribute("data-mappings")) : undefined;
+        for (const textElement of textElements) {
+            const mappings = textElement.dataset.mappings !== undefined ? JSON.parse(textElement.dataset.mappings) : undefined;
             let rawText = handler.getRawText(textElement);
             let text;
             const differences = [];
 
             if (mappings) {
                 // Track special character (&gt;, &ls;, etc) positions as if they weren't expanded as so we can adjust the ligature indexes
-                const regex = /&(?:gt|lt|amp);/gi;
-                const specials = [];
-                let match;
-                while((match = regex.exec(rawText)) != null) {
-                    specials.push({
-                        index: match.index - specials.reduce(function(acc2, value) {
-                            return acc2 + value.offset;
-                        }, 0),
+                const specials = [...rawText.matchAll(/&(?:gt|lt|amp);/gi)].reduce((acc, match) => {
+                    acc.push({
+                        index: match.index - acc.reduce((acc2, value) => acc2 + value.offset, 0),
                         offset: match[0].length - 1
                     });
-                }
 
-                for (let i = 0; i < mappings.length; i++) {
-                    const mapping = mappings[i];
-                    const index = mapping[0] + differences.reduce(function(acc, value) {
-                            return acc + value.offset;
-                        }, 0) + specials.filter(function(value) {
-                            return value.index < mapping[0];
-                        }).reduce(function(acc, value) {
-                            return acc + value.offset;
-                        }, 0);
+                    return acc;
+                }, []);
+
+                for (const mapping of mappings) {
+                    // Finds the index of the ligature based off it's stored position before expansion, plus the offset
+                    // from all the previous ligatures, and plus the offsets of all the special characters upto the
+                    // stored index
+                    const index = mapping[0] + differences.reduce((acc, value) => acc + value.offset, 0) +
+                        specials.filter(value => value.index < mapping[0])
+                            .reduce((acc, value) => acc + value.offset, 0);
                     const ligature = mapping[1];
 
                     rawText = rawText.substring(0, index) + ligature + rawText.substring(index + 1);
@@ -352,7 +361,7 @@
             let elementOffset;
             let insideSpecial = false;
 
-            // Loop until we reach the end of the element's text to catch all the occurances
+            // Loop until we reach the end of the element's text to catch all the occurrences
             while (i < text.length) {
                 for (elementOffset = 0; (i + elementOffset) < text.length && searchOffset < search.searchTerm.length;) {
                     // Store whether we're inside a special character (starts with &, ends with ;, E.G. &amp;
@@ -381,12 +390,10 @@
                         searchOffset = 0;
                         i++;
                     } else {
-                        let difference;
                         if (!matchDescriber.elements.length) {
                             matchDescriber.beginning = i;
 
-                            for (let j = 0; j < differences.length; j++) {
-                                difference = differences[j];
+                            for (const difference of differences) {
                                 if (matchDescriber.beginning > difference.index) {
                                     if (matchDescriber.beginning < difference.index + difference.offset) {
                                         matchDescriber.beginning -= (matchDescriber.beginning - difference.index);
@@ -404,8 +411,7 @@
                         if (searchOffset === search.searchTerm.length) {
                             matchDescriber.end = i + elementOffset;
 
-                            for (let j = 0; j < differences.length; j++) {
-                                difference = differences[j];
+                            for (const difference of differences) {
                                 if (matchDescriber.end > difference.index) {
                                     if (matchDescriber.end < difference.index + difference.offset) {
                                         matchDescriber.end -= (matchDescriber.end - difference.index);
@@ -432,13 +438,45 @@
         matches[getPageNumberFromId(page.id)].pageHandler = handler;
     }
 
+    // Highlight Selection
+    IDRViewer.on("searchresultselected", data => {
+        clearSelectedMatch();
+
+        selectedMatch = {page:data.result.page, index:data.result.index};
+        const match = matches[data.result.page];
+
+        if (match === undefined) {
+            console.error("That page doesn't have any results on it");
+            return;
+        } else if (match.count <= data.result.index) {
+            console.error("There aren't that many results on that page");
+            return;
+        } else if (!match.pageHandler) {
+            return;
+        }
+
+        match.pageHandler.setMatchDescriptorSelected(data.result.index, true);
+
+        match.pageHandler.scrollIntoView(data.result.index);
+    });
+
+    function clearSelectedMatch() {
+        if (Object.keys(matches) && selectedMatch) {
+            const match = matches[selectedMatch.page];
+            if (match)
+                match.pageHandler.setMatchDescriptorSelected(selectedMatch.index, false);
+        }
+
+        selectedMatch = null;
+    }
+
     // Page Handler Utility Functions
     function makeIndexString(index) {
-        return stringPad(Number(index).toString(16), 6, "0");
+        return Number(index).toString(16).padStart(6, "0");
     }
 
     // Page Handlers
-    let SVGPageHandler = (function(page) {
+    let SVGPageHandler = function(page) {
         const svgns = "http://www.w3.org/2000/svg";
 
         let svgPageHandler = {
@@ -524,7 +562,7 @@
 
         svgPageHandler.clearHighlights = function() {
             // clear out the existing highlights by removing all the shapes that use the highlight class
-            let highlighted = nodeListToArray(page.querySelector("object").contentDocument.querySelectorAll(".highlight"));
+            let highlighted = [...page.querySelector("object").contentDocument.querySelectorAll(".highlight")];
             while (highlighted.length > 0) {
                 let child = highlighted.pop();
                 child.parentNode.removeChild(child);
@@ -553,17 +591,25 @@
         svgPageHandler.setMatchDescriptorSelected = function(index, selected) {
             const highlights = page.querySelector("object").contentDocument.querySelectorAll("[data-index=\"" + makeIndexString(index) + "\"].highlight");
 
-            for (let j = 0; j < highlights.length; j++) {
-                const highlight = highlights[j];
+            for (const highlight of highlights) {
                 if (selected) {
-                    highlight.setAttribute("class", "highlight selected");
+                    highlight.classList.add("selected");
                     highlight.style.fill = "orange";
                 }
                 else {
-                    highlight.setAttribute("class", "highlight");
+                    highlight.classList.remove("selected");
                     highlight.style.fill = "";
                 }
             }
+        };
+
+        svgPageHandler.scrollIntoView = function(index) {
+            const highlightedElement = svgPageHandler.searchResults[index].refElement;
+
+            highlightedElement.scrollIntoView({
+                block: 'nearest',
+                inline: 'start'
+            });
         };
 
         svgPageHandler.getMatchesCount = function() {
@@ -571,9 +617,9 @@
         };
 
         return svgPageHandler;
-    });
+    };
 
-    let HTMLPageHandler = (function(page) {
+    let HTMLPageHandler = function(page) {
         let htmlPageHandler = {
             textElements: undefined,
             searchResults: []
@@ -590,9 +636,7 @@
         function updateChangedElements(changedElements, element) {
             // The length of the <span class="highlight" data-index="xxxxxx"></span> (not including the text between it)
             const length = 51;
-            const changedElement = arrayFind(changedElements, function(item) {
-                return item.element === element;
-            });
+            const changedElement = changedElements.find((item) => item.element === element);
 
             if (changedElement) {
                 changedElement.length += length;
@@ -715,11 +759,19 @@
         htmlPageHandler.setMatchDescriptorSelected = function(index, selected) {
             const highlights = page.querySelectorAll("[data-index=\"" + makeIndexString(index) + "\"].highlight");
 
-            for (let j = 0; j < highlights.length; j++) {
-                const highlight = highlights[j];
+            for (const highlight of highlights) {
                 if (selected) highlight.classList.add("selected");
                 else highlight.classList.remove("selected");
             }
+        };
+
+        htmlPageHandler.scrollIntoView = function(index) {
+            const highlightedElement = htmlPageHandler.searchResults[index].elements[0];
+
+            highlightedElement.scrollIntoView({
+                block: 'nearest',
+                inline: 'start'
+            });
         };
 
         htmlPageHandler.getMatchesCount = function() {
@@ -727,5 +779,5 @@
         };
 
         return htmlPageHandler;
-    });
+    };
 })();

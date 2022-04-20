@@ -1,4 +1,3 @@
-/* v1.5.0 */
 (function() {
     "use strict";
 
@@ -90,7 +89,8 @@
                 'click': [],
                 'mouseover': [],
                 'mouseout': [],
-                'touchstart': []
+                'touchstart': [],
+                'setup': []
             };
 
         ActionHandler.register = function(types, events, handler) {
@@ -136,6 +136,14 @@
             }
         };
 
+        ActionHandler.onsetup = function(data, config) {
+            for (var i = 0; i < handlers.setup.length; i++) {
+                if (data.type === handlers.setup[i].type) {
+                    handlers.setup[i].handler.onsetup.apply(this, [data, config]);
+                }
+            }
+        };
+
         return ActionHandler;
     })();
 
@@ -168,22 +176,28 @@
             pageCount = data.pagecount;
         });
 
+        LinkActionHandler.onsetup = function(data) {
+            if (data.action && data.action.type === "URI") {
+                const element = document.createElement("a");
+                element.href = data.action.uri;
+                element.title = data.action.uri;
+                element.target = "_blank";
+                element.style.position = "absolute";
+                element.style.width = "100%";
+                element.style.height = "100%";
+                this.appendChild(element);
+            }
+        };
+
         LinkActionHandler.onmouseover = function(data) {
-            if (data.action) {
+            if (data.action && data.action.type !== "URI") {
                 this.style.cursor = "pointer";
-                if (data.action.type === "URI") {
-                    this.title = data.action.uri;
-                }
             }
         };
 
         LinkActionHandler.onclick = function(data, config) {
             if (data.action) {
                 switch (data.action.type) {
-                    case "URI":
-                        window.open(data.action.uri, "_blank");
-                        break;
-
                     case "GoTo":
                         IDRViewer.goToPage(data.action.page, data.action.zoom);
                         break;
@@ -219,7 +233,7 @@
             }
         };
 
-        ActionHandler.register(["Link", "Widget", "TextLink"], ["click", "mouseover"], LinkActionHandler);
+        ActionHandler.register(["Link", "Widget", "TextLink"], ["click", "mouseover", "setup"], LinkActionHandler);
     })();
 
     (function() {
@@ -435,6 +449,7 @@
             annotation.addEventListener("touchstart", function() {
                 ActionHandler.ontouchstart.apply(this, [data, config]);
             });
+            ActionHandler.onsetup.apply(annotation, [data, config]);
         };
 
         LoadManager.setLoadFunction(createAnnotation);
