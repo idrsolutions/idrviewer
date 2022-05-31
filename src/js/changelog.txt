@@ -1,6 +1,9 @@
 IDRViewer Changelog
 -------------------
 
+1.16.1 (31 May 2022)
+- Update dev dependencies
+
 1.16.0 (19 Apr 2022)
 - Migrated from QUnit to Playwright for testing
 - Dropped Grunt usage in favor of npm scripts
