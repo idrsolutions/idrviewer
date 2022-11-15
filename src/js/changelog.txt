@@ -1,6 +1,10 @@
 IDRViewer Changelog
 -------------------
 
+1.17.0 (15 Nov 2022)
+- Allow paddingX and paddingY to be configurable via the config
+- Update dev dependencies
+
 1.16.3 (04 Oct 2022)
 - Update dev dependencies
 
