@@ -1,6 +1,9 @@
 IDRViewer Changelog
 -------------------
 
+1.17.2 (04 Apr 2023)
+- Update dev dependencies
+
 1.17.1 (10 Jan 2023)
 - Update dev dependencies
 
