@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html style="width: 100%; height: 100%;">
 <head>
-    <!-- v2.0.0 -->
+    <!-- v2.1.0 -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <style type="text/css"><%= require('html-loader!../../css/idrviewer.css').default %></style>
     <style type="text/css"><%= require('html-loader!./style.css').default %></style>
     <%= htmlWebpackPlugin.tags.headTags %>
@@ -16,12 +15,12 @@
 </div>
 <div id="controls">
     <div id="controls-center">
-        <button id="btnPrev" title="Previous Page" class="btn"><i class="fa fa-caret-left fa-4x" aria-hidden="true"></i></button>
+        <button id="btnPrev" title="Previous Page" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg></button>
         <span id="btnPage"></span>
-        <button id="btnNext" title="Next Page" class="btn"><i class="fa fa-caret-right fa-4x" aria-hidden="true"></i></button>
+        <button id="btnNext" title="Next Page" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></button>
     </div>
     <div id="controls-right">
-        <button id="btnFullScreen" title="Fullscreen" class="btn"><i class="fa fa-arrows-alt fa-2x" aria-hidden="true"></i></button>
+        <button id="btnFullScreen" title="Fullscreen" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></button>
     </div>
 </div>
 <script src="config.js" type="text/javascript"></script>

@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- v3.0.0 -->
+<!-- v3.1.0 -->
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title></title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 <style type="text/css"><%= require('html-loader!../../css/idrviewer.css').default %></style>
 <style type="text/css"><%= require('html-loader!./style.css').default %></style>
 <%= htmlWebpackPlugin.tags.headTags %>
@@ -14,9 +13,9 @@
 <body class="light-theme">
     <nav id="sidebar">
         <div id="sidebar-controls" class="controls">
-            <button id="btnThumbnails" data-lang-title="control.thumbnails" title="Thumbnails" class="btn"><i class="fa fa-picture-o fa-lg" aria-hidden="true"></i></button>
-            <button id="btnBookmarks" data-lang-title="control.bookmarks" title="Bookmarks" class="btn"><i class="fa fa-list-ul fa-lg" aria-hidden="true"></i></button>
-            <button id="btnSearch" data-lang-title="control.search" title="Search" class="btn"><i class="fa fa-search fa-lg" aria-hidden="true"></i></button>
+            <button id="btnThumbnails" data-lang-title="control.thumbnails" title="Thumbnails" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20 4v12H8V4h12m0-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 9.67l1.69 2.26 2.48-3.1L19 15H9zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg></button>
+            <button id="btnBookmarks" data-lang-title="control.bookmarks" title="Bookmarks" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/></svg></button>
+            <button id="btnSearch" data-lang-title="control.search" title="Search" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
         </div>
         <div id="sidebar-content">
             <div id="thumbnails-panel"></div>
@@ -47,22 +46,21 @@
     <div id="main">
         <nav id="controls" class="controls">
             <div id="controls-left">
-                <button id="btnSideToggle" data-lang-title="control.sidebar" title="Sidebar" class="btn"><i class="fa fa-th fa-lg" aria-hidden="true"></i></button>
-                <button id="btnThemeToggle" data-lang-title="control.theme-toggle" title="Theme Toggle" class="btn"><i class="fa fa-lightbulb-o fa-lg" aria-hidden="true"></i></button>
+                <button id="btnSideToggle" data-lang-title="control.sidebar" title="Sidebar" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M185.087 870.913h138.522V281.087H185.087v589.826Zm218.305 0h371.521V281.087H403.392v589.826Zm-79.783 0H185.087h138.522Zm-217.74 79.218V201.304h748.827v748.827H105.869Z"/></svg></button>
             </div>
 
             <div id="controls-center">
-                <button id="btnPrev" data-lang-title="control.prev" title="Previous Page" class="btn"><i class="fa fa-caret-left fa-2x" aria-hidden="true"></i></button>
+                <button id="btnPrev" data-lang-title="control.prev" title="Previous Page" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg></button>
                 <select id="btnGo">
 
                 </select>
                 <span id="pgCount"></span>
-                <button id="btnNext" data-lang-title="control.next" title="Next Page" class="btn"><i class="fa fa-caret-right fa-2x" aria-hidden="true"></i></button>
+                <button id="btnNext" data-lang-title="control.next" title="Next Page" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></button>
 
-                <button id="btnSelect" data-lang-title="control.select" title="Select" class="btn mobile-hidden"><i class="fa fa-i-cursor fa-lg" aria-hidden="true"></i></button>
-                <button id="btnMove" title="Pan" data-lang-title="control.move" class="btn mobile-hidden"><i class="fa fa-arrows fa-lg" aria-hidden="true"></i></button>
+                <button id="btnSelect" data-lang-title="control.select" title="Select" class="btn mobile-hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M436.739 963.132v-79.784h88.087v79.784h-88.087Zm0-695.045v-79.219h88.087v79.219h-88.087Zm175.087 695.045v-79.784h88.087v79.784h-88.087Zm0-695.045v-79.219h88.087v79.219h-88.087Zm176.087 695.045v-79.784h79.219v79.784h-79.219Zm0-167.784v-88.087h79.219v88.087h-79.219Zm0-176.087v-88.087h79.219v88.087h-79.219Zm0-175.087v-88.087h79.219v88.087h-79.219Zm0-176.087v-79.219h79.219v79.219h-79.219ZM92.868 963.132v-79.784h88.826V268.087H92.868v-79.219H348.74v79.219h-87.826v615.261h87.826v79.784H92.869Z"/></svg></button>
+                <button id="btnMove" title="Pan" data-lang-title="control.move" class="btn mobile-hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 2 12 5 15"></polyline><polyline points="9 5 12 2 15 5"></polyline><polyline points="15 19 12 22 9 19"></polyline><polyline points="19 9 22 12 19 15"></polyline><line x1="2" y1="12" x2="22" y2="12"></line><line x1="12" y1="2" x2="12" y2="22"></line></svg></button>
 
-                <button id="btnZoomOut" data-lang-title="control.zoom-out" title="Zoom Out" class="btn mobile-hidden"><i class="fa fa-minus fa-lg" aria-hidden="true"></i></button>
+                <button id="btnZoomOut" data-lang-title="control.zoom-out" title="Zoom Out" class="btn mobile-hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg></button>
                 <select id="btnZoom" class="mobile-hidden">
                     <option value="specific">100%</option>
                     <option data-lang-text="control.actual-size" value="actualsize">Actual Size</option>
@@ -71,13 +69,20 @@
                     <option data-lang-text="control.fit-page" value="fitpage">Fit Page</option>
                     <option data-lang-text="control.auto" value="auto">Automatic</option>
                 </select>
-                <button id="btnZoomIn" data-lang-title="control.zoom-in" title="Zoom In" class="btn mobile-hidden"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                <button id="btnZoomIn" data-lang-title="control.zoom-in" title="Zoom In" class="btn mobile-hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
                 <select id="btnView" class="mobile-hidden">
 
                 </select>
             </div>
             <div id="controls-right">
-                <button id="btnFullScreen" data-lang-title="control.fullscreen" title="Fullscreen" class="btn"><i class="fa fa-arrows-alt fa-lg" aria-hidden="true"></i></button>
+                <button id="btnThemeToggle" data-lang-title="control.theme-toggle" title="Theme Toggle" class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-theme-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-theme-light" viewBox="0 0 24 24"><rect fill="none" height="24" width="24"/><path d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/></svg>
+                </button>
+                <button id="btnFullScreen" data-lang-title="control.fullscreen" title="Fullscreen" class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-fullscreen" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-fullscreen-exit" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
+                </button>
             </div>
         </nav>
 

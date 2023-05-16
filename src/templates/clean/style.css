@@ -15,6 +15,11 @@ body {
     cursor: pointer;
 }
 
+
+.btn svg {
+    filter: drop-shadow(0 0 1px #595959);
+}
+
 .page {
     box-shadow: 1px 1px 4px rgba(120, 120, 120, 0.5);
 }
@@ -26,7 +31,6 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    transition: 0.3s ease 0s;
 }
 
 #controls span {
@@ -46,6 +50,18 @@ body {
     right: 0;
     position: absolute;
 }
+
+body:fullscreen .icon-fullscreen,
+body:not(:fullscreen) .icon-fullscreen-exit {
+    display: none;
+}
+
+.light-theme .icon-theme-light,
+.dark-theme .icon-theme-dark {
+    display: none;
+}
+
+#btnThemeToggle { padding: 3px; }
 
 #btnPage {
     font-family: Arial, sans-serif;
@@ -68,6 +84,7 @@ body {
 .light-theme #btnPage,
 .light-theme .btn{
     color: white;
+    fill: currentColor;
     text-shadow: 0 0 1px #595959;
 }
 .light-theme .btn:hover {
@@ -92,6 +109,7 @@ body {
 .dark-theme .btn {
     opacity: 0.7;
     color: white;
+    fill: currentColor;
 }
 .dark-theme .btn:hover {
     opacity: 0.95;

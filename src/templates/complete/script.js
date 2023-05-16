@@ -873,11 +873,17 @@
         document.title = data.title ? data.title : data.fileName; // Set title
 
         // Set up theme toggle
-        d('btnThemeToggle').addEventListener('click', function () {
-            const isDarkTheme = document.body.className.indexOf('dark-theme') !== -1;
-            ClassHelper.removeClass(document.body, 'light-theme');
-            ClassHelper.removeClass(document.body, 'dark-theme');
-            ClassHelper.addClass(document.body, isDarkTheme ? 'light-theme' : 'dark-theme');
+        const setTheme = function(isDarkTheme) {
+            ClassHelper.removeClass(document.body, "light-theme");
+            ClassHelper.removeClass(document.body, "dark-theme");
+            ClassHelper.addClass(document.body, isDarkTheme ? "dark-theme" : "light-theme");
+        };
+        setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
+        d('btnThemeToggle').addEventListener('click', function() {
+            setTheme(document.body.className.indexOf('dark-theme') === -1);
+        });
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            setTheme(event.matches);
         });
 
         // Set up fullscreen toggle

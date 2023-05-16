@@ -37,25 +37,27 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    transition: 0.3s ease 0s;
+    display: flex;
+    justify-content: space-between;
+}
+#controls > div {
+    display: flex;
+    align-self: center;
 }
 #controls-left {
-    display: inline-block;
-    left: 0;
-    position: absolute;
+    justify-content: start;
+    padding-left: 5px;
 }
 #controls-center {
-    display: inline-block;
+    justify-content: center;
 }
 #controls-right {
-    display: inline-block;
-    right: 0;
-    position: absolute;
+    justify-content: flex-end;
+    padding-right: 5px;
 }
 
 #controls select {
     height: 25px;
-    margin-top: 10px;
 }
 .btn {
     border: 0 none;
@@ -64,19 +66,27 @@ body {
     width: 30px;
     background-color: transparent;
     display: inline-block;
-    margin: 7px 5px 0;
+    margin: 0 5px 0;
     vertical-align: top;
     cursor: pointer;
 }
+.btn svg {
+    filter: drop-shadow(0 0 1px #595959);
+}
 #pgCount {
     font-family: Arial,serif;
-    vertical-align: middle;
     font-size: 15px;
+    margin-left: 5px;
 }
 #pgCount,
 .btn,
 #controls select {
+    align-self: center;
     color: white;
+    fill: currentColor;
+}
+#controls select {
+    border-radius: 5px;
 }
 
 #btnSelect, #btnZoomOut, #btnView {
@@ -91,6 +101,19 @@ body {
 #btnZoom {
     width: 95px;
 }
+
+body:fullscreen .icon-fullscreen,
+body:not(:fullscreen) .icon-fullscreen-exit {
+    display: none;
+}
+
+.light-theme .icon-theme-light,
+.dark-theme .icon-theme-dark {
+    display: none;
+}
+
+#btnSideToggle, #btnBookmarks, #btnSearch, #btnSelect { padding: 2px; }
+#btnThemeToggle, #btnThumbnails, #btnMove { padding: 3px; }
 
 .light-theme .controls {
     background: #9eacba none repeat scroll 0 0;
@@ -148,7 +171,8 @@ body {
 }
 #sidebar-controls {
     height: 44px;
-    display: block;
+    display: flex;
+    padding-left: 5px;
 }
 #sidebar-content {
     top: 45px;

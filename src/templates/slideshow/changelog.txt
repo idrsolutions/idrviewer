@@ -1,6 +1,9 @@
 SlideShow UI Changelog
 ----------------------
 
+2.1.0 (16 May 2023)
+- Update to use SVG icons (remove the FontAwesome dependency)
+
 2.0.0 (19 Apr 2022)
 - Migrated to fully self-contained UI template built using webpack
 - Updated to IDRViewer 1.16.0

@@ -54,11 +54,11 @@
         // contain.style.float = "left"; // Other potential fix for Chrome scrollbars.
         contain.style.minWidth = "100%";
         contain.style.lineHeight = "normal";
+        contain.style.overflow = "hidden"; // Needed otherwise transitions create scroll bars
         mainContainer.appendChild(contain);
 
         pageContainer = document.createElement('div');
         pageContainer.id = "contentContainer";
-        pageContainer.style.overflow = "hidden";
         pageContainer.style.transform = "translateZ(0)";
         pageContainer.style.padding = paddingY + "px " + paddingX + "px";
         contain.appendChild(pageContainer);
@@ -495,6 +495,7 @@
             if (forceLoad) {
                 load(pg);
             }
+
             clearTimeout(timer);
             timer = setTimeout(process, DELAY);
         };
@@ -627,6 +628,7 @@
             /*jshint loopfunc: true */
             for (var i = 1; i <= pgCount; i++) {
                 ClassHelper.removeClass(pages[i], 'current', 'prev', 'next', 'before', 'after');
+                delete pages[i].dataset.visible;
 
                 if (i < pg) {
                     ClassHelper.addClass(pages[i], 'before');
@@ -635,6 +637,7 @@
                 }
             }
             ClassHelper.addClass(pages[pg], 'current');
+            pages[pg].dataset.visible = 'true';
 
             if (pg - 1 >= 1) {
                 ClassHelper.addClass(pages[pg - 1], 'prev');
@@ -758,11 +761,14 @@
             /*jshint loopfunc: true */
             for (var i = 1; i <= pgCount; i++) {
                 ClassHelper.removeClass(pages[i], 'current', 'prev', 'next', 'before', 'after');
+                delete pages[i].dataset.visible;
             }
 
             ClassHelper.addClass(pages[pg], 'current');
+            pages[pg].dataset.visible = 'true';
             if (isDoubleSpread(pg)) {
                 ClassHelper.addClass(pages[pg + 1], 'current');
+                pages[pg + 1].dataset.visible = 'true';
             }
 
             if (pg == 1) {
@@ -927,6 +933,10 @@
         };
 
         var setVisiblePages = function() {
+            visiblePages.forEach(page => {
+                delete pages[page].dataset.visible;
+            });
+
             visiblePages = [curPg];
             var i, bounds, viewPortHeight = mainContainer.clientHeight;
 
@@ -941,6 +951,10 @@
             for (i = curPg + 1; i <= pgCount && isPageVisible(i); i++) {
                 visiblePages.push(i);
             }
+
+            visiblePages.forEach(page => {
+                pages[page].dataset.visible = "true";
+            });
         };
 
         Continuous.goToPage = function(pg, location) {
@@ -980,7 +994,9 @@
             return visiblePages;
         };
 
-        Continuous.updateLayout = function() { };
+        Continuous.updateLayout = function() {
+            setVisiblePages();
+        };
 
         Continuous.isLastPage = function(page) {
             return page === pgCount;

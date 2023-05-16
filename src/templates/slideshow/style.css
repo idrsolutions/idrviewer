@@ -6,7 +6,7 @@ body {
 .btn {
     border: 0 none;
     height: 60px;
-    padding: 0;
+    padding: 6px;
     width: 60px;
     background-color: transparent;
     display: inline-block;
@@ -54,6 +54,7 @@ body {
 .btn {
     opacity: 0.7;
     color: white;
+    fill: currentColor;
 }
 .btn:hover {
     opacity: 0.95;

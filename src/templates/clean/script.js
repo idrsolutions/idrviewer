@@ -49,6 +49,7 @@
     IDRViewer.on('ready', function(data) {
         // Grab buttons
         Button.fullscreen = d('btnFullScreen');
+        Button.themeToggle = d('btnThemeToggle');
         Button.prev = d('btnPrev');
         Button.next = d('btnNext');
         Button.zoomIn = d('btnZoomIn');
@@ -143,12 +144,17 @@
             }
         });
 
-        var themeToggle = false;
-        d('title').addEventListener('click', function() {
+        const setTheme = function(isDarkTheme) {
             ClassHelper.removeClass(document.body, "light-theme");
             ClassHelper.removeClass(document.body, "dark-theme");
-            ClassHelper.addClass(document.body, themeToggle ? "light-theme" : "dark-theme");
-            themeToggle = !themeToggle;
+            ClassHelper.addClass(document.body, isDarkTheme ? "dark-theme" : "light-theme");
+        };
+        setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
+        Button.themeToggle.addEventListener('click', function() {
+            setTheme(document.body.className.indexOf('dark-theme') === -1);
+        });
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            setTheme(event.matches);
         });
     });
 
