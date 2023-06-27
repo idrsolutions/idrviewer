@@ -37,11 +37,13 @@ See [Annotations JSON API](https://support.idrsolutions.com/buildvu/api-document
 4. To run the tasks, run `npm run <taskname>` where `<taskname>` is one of the following:
    - 'jshint' is for running static analysis on the JavaScript files.
    - 'playwright' is for running the automated IDRViewer tests (in /src/test/)
-   - 'webpack' is for building the UI templates to /examples/
+   - 'test' is for jshint and playwright tests
+   - 'webpack' is for building the UIs
+   - 'webpack-watch' is for building the UIs and watching for changes
 
 ## License
 
-Copyright 2022 IDRsolutions
+Copyright 2023 IDRsolutions
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

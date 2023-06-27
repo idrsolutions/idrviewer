@@ -32,7 +32,7 @@
                 return;
             }
 
-            var request = new XMLHttpRequest();
+            const request = new XMLHttpRequest();
             request.open('GET', baseUrl + 'search.json', true);
 
             if (progressListener) {
@@ -66,7 +66,7 @@
         }
     };
 
-    var resultsLimit;
+    let resultsLimit;
 
     IDRViewer.search = function(searchTerm, matchCase, limitOnePerPage, decomposeSnippets = false) {
         if (!textContent) {
@@ -78,18 +78,18 @@
         if (textContent && searchTerm) {
             searchTerm = matchCase ? searchTerm : searchTerm.toUpperCase();
 
-            for (var i = 0; i < textContent.length; i++) {
-                var pageContent = matchCase ? textContent[i] : textContent[i].toUpperCase();
-                var index = -1;
-                var resultIndex = 0;
+            for (let i = 0; i < textContent.length; i++) {
+                const pageContent = matchCase ? textContent[i] : textContent[i].toUpperCase();
+                let index = -1;
+                let resultIndex = 0;
 
                 do {
                     index = pageContent.indexOf(searchTerm, index + 1);
                     if (index >= 0) {
-                        var SNIPPET_LENGTH = 50;
-                        var snippetStart = index >= SNIPPET_LENGTH ? index - SNIPPET_LENGTH : 0;
-                        var snippetEnd = index + searchTerm.length < textContent[i].length - SNIPPET_LENGTH ? index + searchTerm.length + SNIPPET_LENGTH : textContent[i].length;
-                        var result = {
+                        const SNIPPET_LENGTH = 50;
+                        const snippetStart = index >= SNIPPET_LENGTH ? index - SNIPPET_LENGTH : 0;
+                        const snippetEnd = index + searchTerm.length < textContent[i].length - SNIPPET_LENGTH ? index + searchTerm.length + SNIPPET_LENGTH : textContent[i].length;
+                        const result = {
                             page: i + 1,
                             index: resultIndex++
                         };

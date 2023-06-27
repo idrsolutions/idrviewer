@@ -1,6 +1,11 @@
 IDRViewer Changelog
 -------------------
 
+1.19.0 (27 Jun 2023)
+- Replace var usage with const/let
+- Allow IDRViewer to work with pages that have minified CSS (resolve font-face parsing issue)
+- Update dev dependencies
+
 1.18.0 (16 May 2023)
 - Add page loading spinners
 - Add workaround for Chromium bug #1429343 which was causing images from the next page to incorrectly become visible when magazine transitions are enabled

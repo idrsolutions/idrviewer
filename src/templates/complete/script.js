@@ -129,19 +129,23 @@
             defaultPanel,
             currentPanel;
 
+        const setSidebarNavTabIndex = function(index) {
+            document.querySelectorAll("#sidebar-controls > button").forEach(button => {
+                button.setAttribute("tabindex", index);
+            });
+        };
+
         IDRViewer.on('ready', function (data) {
             d('btnSideToggle').addEventListener('click', Sidebar.toggleSidebar);
             sidebar = d('sidebar');
 
             for (let prop in panels) {
                 panels[prop].setup(data);
-                if (prop === defaultPanel) {
-                    panels[prop].show();
-                } else {
-                    panels[prop].hide();
-                }
+                panels[prop].hide();
             }
             currentPanel = defaultPanel;
+
+            setSidebarNavTabIndex("-1");
         });
 
         Sidebar.register = function (name, handler, isDefault) {
@@ -161,7 +165,7 @@
         };
 
         Sidebar.openSidebar = function () {
-            if (sidebar.className.indexOf('open') === -1) {
+            if (document.body.className.indexOf('sidebar-open') === -1) {
                 Sidebar.toggleSidebar();
             }
         };
@@ -170,8 +174,12 @@
          * Toggle the sidebar open and closed
          */
         Sidebar.toggleSidebar = function () {
-            if (ClassHelper.toggleClass(sidebar, 'open')) {
+            if (ClassHelper.toggleClass(document.body, 'sidebar-open')) {
+                setSidebarNavTabIndex("0");
                 panels[currentPanel].show();
+            } else {
+                panels[currentPanel].hide();
+                setSidebarNavTabIndex("-1");
             }
         };
 
@@ -404,6 +412,7 @@
                 ele.id = 'thumb' + page;
                 ele.dataset.page = String(page);
                 ele.addEventListener('click', clickHandler);
+                ele.setAttribute("tabindex", "-1");
                 ele.setAttribute('title', (LanguageHelper.getTranslation('control.page') || 'Page') + ' ' + page);
                 const margin = Math.floor((heights[page - 1] - 42) / 2);
                 ele.innerHTML = '<div class="spinner" style="margin-top: ' + margin + 'px;"></div>';
@@ -871,6 +880,11 @@
         LanguageHelper.updateElements(); // Set up localization
 
         document.title = data.title ? data.title : data.fileName; // Set title
+
+        // Trigger a relayout when opening/closing the sidebar changes the viewport bounds
+        d('idrviewer').addEventListener("transitionend", function() {
+            IDRViewer.updateLayout();
+        });
 
         // Set up theme toggle
         const setTheme = function(isDarkTheme) {

@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    var IDR = {
+    const IDR = {
         LAYOUT_PRESENTATION: 'presentation',
         LAYOUT_MAGAZINE: 'magazine',
         LAYOUT_CONTINUOUS: 'continuous',
@@ -17,16 +17,16 @@
         ZOOM_AUTO: 'auto'
     };
 
-    var curPg = 1,
+    let curPg = 1,
         pgCount = 0,
         pageContainer,
         mainContainer,
         layout,
         bounds,
-        pages = [],
         paddingX,
         paddingY,
         isSetup = false;
+    const pages = [];
 
     IDR.setup = function (config) {
         if (!config) {
@@ -47,7 +47,7 @@
 
         mainContainer = document.getElementById("idrviewer");
 
-        var contain = document.createElement('div');
+        const contain = document.createElement('div');
         contain.style.position = "relative";
         contain.style.display = "inline-block"; // Required for continuous mode when pages larger than browser width
         contain.style.verticalAlign = "middle"; // Fixes Chrome showing scrollbars in presentation/magazine layout
@@ -63,8 +63,8 @@
         pageContainer.style.padding = paddingY + "px " + paddingX + "px";
         contain.appendChild(pageContainer);
 
-        for (var i = 1; i <= pgCount; i++) {
-            var page = document.createElement('div');
+        for (let i = 1; i <= pgCount; i++) {
+            const page = document.createElement('div');
             page.id = 'page' + i;
             page.setAttribute('style', 'width: ' + bounds[i - 1][0] + 'px; height: ' + bounds[i - 1][1] + 'px;');
             page.className = "page";
@@ -85,7 +85,7 @@
         layout.goToPage(curPg);
         LoadManager.setPage(curPg, true);
 
-        var data = {
+        const data = {
             selectMode: SelectionManager.currentSelectMode,
             isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
             layout: layout.toString(),
@@ -93,7 +93,7 @@
             isFirstPage: curPg === 1,
             isLastPage: layout.isLastPage(curPg)
         };
-        for (var prop in config) {
+        for (let prop in config) {
             if (config.hasOwnProperty(prop)) {
                 data[prop] = config[prop];
             }
@@ -102,14 +102,14 @@
         IDR.fire('ready', data);
     };
 
-    var PageManager = (function() {
-        var exports = {},
-            fontsSheet,
+    const PageManager = (function() {
+        const exports = {},
+            isLocal = location.protocol === "file:",
+            fontList = [];
+        let fontsSheet,
             isSharedCssAppended = false,
-            fontList = [],
             isSVG,
             isSVGZ,
-            isLocal = location.protocol === "file:",
             URL = "";
 
         exports.setup = function(pageType, url) {
@@ -124,7 +124,7 @@
                 console.log("Cannot load pages using AJAX over the file:// protocol. Falling back to iframes (some features may not be available).");
             }
 
-            var fontStyleElement = document.createElement('style');
+            const fontStyleElement = document.createElement('style');
             fontStyleElement.setAttribute('type', 'text/css');
             document.head.appendChild(fontStyleElement);
             fontsSheet = fontStyleElement.sheet;
@@ -146,7 +146,7 @@
             }
         };
 
-        var clearSelection = function(win) {
+        const clearSelection = function(win) {
             try {
                 if (win.getSelection) {
                     if (win.getSelection().empty) {  // Chrome / Edge
@@ -160,10 +160,10 @@
             } catch (ignore) {}
         };
 
-        var clearSelectionAll = function(win) {
+        const clearSelectionAll = function(win) {
             try {
                 clearSelection(win);
-                for (var i = 1; i <= pgCount; i++) {
+                for (let i = 1; i <= pgCount; i++) {
                     if (LoadManager.isVisible(i)) {
                         clearSelection(pages[i].firstChild.contentDocument);
                     }
@@ -171,17 +171,18 @@
             } catch (ignore) {}
         };
 
-        var iframeLoad = function(page, callback) {
-            var iframe = document.createElement('iframe');
+        const iframeLoad = function(page, callback) {
+            const iframe = document.createElement('iframe');
             iframe.setAttribute('class', 'page-inner');
             iframe.setAttribute('src', URL + page + '.html');
+            iframe.setAttribute('tabindex', '-1');
             iframe.setAttribute('style', 'width: ' + bounds[page - 1][0] + 'px; height: ' + bounds[page - 1][1] + 'px; position: absolute; border: 0;');
             iframe.onload = callback;
             pages[page].appendChild(iframe);
         };
 
-        var svgLoad = function(page, callback) {
-            var svgLoadHandler = function() {
+        const svgLoad = function(page, callback) {
+            const svgLoadHandler = function() {
                 this.removeEventListener('load', svgLoadHandler);
                 try {
                     this.contentDocument.addEventListener('mousedown', function (event) {
@@ -193,7 +194,7 @@
                 callback();
             };
 
-            var svgElement = document.createElement('object');
+            const svgElement = document.createElement('object');
             svgElement.setAttribute('width', '' + bounds[page - 1][0]);
             svgElement.setAttribute('height', '' + bounds[page - 1][1]);
             svgElement.setAttribute('data', URL + page + (isSVGZ ? '.svgz' : '.svg'));
@@ -204,29 +205,31 @@
             pages[page].appendChild(svgElement);
         };
 
-        var handleLoad = function(html, page, callback) {
-            var newDoc = document.createElement('div');
+        const handleLoad = function(html, page, callback) {
+            const newDoc = document.createElement('div');
             newDoc.innerHTML = html;
-            var pageElement = newDoc.querySelector("#p" + page);
+            const pageElement = newDoc.querySelector("#p" + page);
             pageElement.style.margin = '0';
             pageElement.style.overflow = 'hidden';
             pageElement.style.position = 'absolute';
 
-            var setLoaded = function() {
+            const setLoaded = function() {
                 if (this) {
                     this.removeEventListener('load', setLoaded);
                 }
                 callback();
             };
 
-            var background = pageElement.querySelector('#pdf' + page);
-            var externalBackground = background.getAttribute("data") || background.getAttribute("src");
+            const background = pageElement.querySelector('#pdf' + page);
+            background.setAttribute("tabindex", "-1"); // Prevent object element appearing in tab order
+
+            const externalBackground = background.getAttribute("data") || background.getAttribute("src");
             if (externalBackground) {
                 background.addEventListener('load', setLoaded);
             }
 
             if (URL) {
-                var currentSrc = background.getAttribute("data"); // NS_ERROR_UNEXPECTED (before appending)
+                let currentSrc = background.getAttribute("data"); // NS_ERROR_UNEXPECTED (before appending)
                 if (currentSrc) {
                     background.setAttribute("data", URL + currentSrc);
                 } else {
@@ -237,12 +240,12 @@
                 }
             }
 
-            var fontFaceElement = pageElement.querySelector('#fonts' + page);
+            const fontFaceElement = pageElement.querySelector('#fonts' + page);
             if (fontFaceElement) {
-                var fontFacesString = fontFaceElement.innerHTML;
+                const fontFacesString = fontFaceElement.innerHTML;
                 fontFaceElement.parentNode.removeChild(fontFaceElement);
 
-                fontFacesString.match(/@font-face {[\s\S]*?}/g).forEach(function(fontFace) {
+                fontFacesString.match(/@font-face\s*{[\s\S]*?}/g).forEach(function(fontFace) {
                     if (fontList.indexOf(fontFace) === -1) {
                         fontList.push(fontFace);
                         // Replace does not catch base64 fonts because they do not include the quote
@@ -251,7 +254,7 @@
                 });
             }
 
-            var sharedCssElement = pageElement.querySelector(".shared-css");
+            const sharedCssElement = pageElement.querySelector(".shared-css");
             if (sharedCssElement) {
                 sharedCssElement.parentNode.removeChild(sharedCssElement);
                 if (!isSharedCssAppended) {
@@ -269,8 +272,8 @@
             }
         };
 
-        var ajaxLoad = function(page, callback) {
-            var request = new XMLHttpRequest();
+        const ajaxLoad = function(page, callback) {
+            const request = new XMLHttpRequest();
             request.open('GET', URL + page + ".html", true);
             request.onload = function() {
                 if (request.status >= 200 && request.status < 400) {
@@ -310,43 +313,43 @@
         return exports;
     })();
 
-    var LoadManager = (function() {
-        var PageStates = {
+    const LoadManager = (function() {
+        const PageStates = {
             LOADING: 'loading',
             HIDDEN: 'hidden',
             UNLOADED: 'unloaded',
             LOADED: 'loaded'
         };
 
-        var exports = { },
-            page,
-            timer,
+        const exports = { },
             DELAY = 500,
             MAX_LOADED = 50,
             MAX_VISIBLE = 20,
             MAX_SIMULTANEOUS = 2,
+            states = [];
+        let page,
+            timer,
             numLoading = 0,
             numLoaded = 0,
             numHidden = 0,
-            numUnloaded,
-            states = [];
+            numUnloaded;
 
         exports.setup = function() {
             numUnloaded = pgCount;
 
-            for (var i = 1; i <= pgCount; i++) {
+            for (let i = 1; i <= pgCount; i++) {
                 states[i] = PageStates.UNLOADED; // Initialise states to unloaded
                 pages[i].dataset.state = PageStates.UNLOADED;
             }
         };
 
-        var setState = function(page, state) {
+        const setState = function(page, state) {
             updateStateCounts(states[page], state);
             states[page] = state;
             pages[page].dataset.state = state;
         };
 
-        var updateStateCounts = function(before, after) {
+        const updateStateCounts = function(before, after) {
             switch(before) {
                 case PageStates.LOADING:
                     numLoading--;
@@ -377,22 +380,22 @@
             }
         };
 
-        var isVisible = function(page) {
+        const isVisible = function(page) {
             return states[page] === PageStates.LOADED;
         };
 
-        var isLoaded = function(page) {
+        const isLoaded = function(page) {
             return states[page] === PageStates.LOADED || states[page] === PageStates.HIDDEN;
         };
 
-        var hide = function(page) {
+        const hide = function(page) {
             if (states[page] === PageStates.LOADED) {
                 setState(page, PageStates.HIDDEN);
                 PageManager.hide(page);
             }
         };
 
-        var load = function(page) {
+        const load = function(page) {
             if (states[page] === PageStates.HIDDEN) {
                 setState(page, PageStates.LOADED);
                 PageManager.show(page);
@@ -400,7 +403,7 @@
             if (states[page] === PageStates.UNLOADED) {
                 setState(page, PageStates.LOADING);
 
-                var callback = function() {
+                const callback = function() {
                     setState(page, PageStates.LOADED);
                     IDR.fire('pageload', {
                         page: page
@@ -411,7 +414,7 @@
             }
         };
 
-        var unload = function(page) {
+        const unload = function(page) {
             if (states[page] === PageStates.LOADED || states[page] === PageStates.HIDDEN) {
                 setState(page, PageStates.UNLOADED);
                 PageManager.unload(page);
@@ -421,11 +424,11 @@
             }
         };
 
-        var process = function() {
+        const process = function() {
             load(page); // Always load the current page
 
             if (numLoading < MAX_SIMULTANEOUS) {
-                for (var i = 1; i < MAX_VISIBLE / 2; i++) {
+                for (let i = 1; i < MAX_VISIBLE / 2; i++) {
                     if (checkBounds(page - i)) {
                         if (!isVisible(page - i)) {
                             load(page - i);
@@ -446,8 +449,8 @@
             }
 
             // Hide pages
-            var pointerA = 1;
-            var pointerB = pgCount;
+            let pointerA = 1;
+            let pointerB = pgCount;
             while (numLoaded + numLoading > MAX_VISIBLE) {
                 // Using the current page as the midpoint, start at the extremities and gradually work inwards
                 // hiding pages until number of pages loaded is within tolerance.
@@ -486,7 +489,7 @@
             timer = setTimeout(process, DELAY);
         };
 
-        var checkBounds = function(page) {
+        const checkBounds = function(page) {
             return page >= 1 && page <= pgCount;
         };
 
@@ -512,17 +515,17 @@
         return exports;
     })();
 
-    var LayoutManager = (function() {
-        var exports = { },
-            layouts = {},
-            defaultLayout,
+    const LayoutManager = (function() {
+        const exports = { },
+            layouts = {};
+        let defaultLayout,
             allPagesSameSize = true,
             isDirectionR2L = false;
 
         exports.setup = function(isR2L) {
             isDirectionR2L = isR2L;
 
-            for (var i = 0; i < pgCount; i++) {
+            for (let i = 0; i < pgCount; i++) {
                 if (bounds[i][0] !== bounds[0][0] || bounds[i][1] !== bounds[0][1]) {
                     allPagesSameSize = false;
                     break;
@@ -586,8 +589,8 @@
     })();
 
     LayoutManager.addLayout(IDR.LAYOUT_PRESENTATION, (function() {
-        var Presentation = { },
-            allPagesSameSize;
+        const Presentation = { };
+        let allPagesSameSize;
 
         Presentation.setup = function(sameSizePages) {
             allPagesSameSize = sameSizePages;
@@ -595,7 +598,7 @@
 
         Presentation.unload = function() {
             /*jshint loopfunc: true */
-            for (var i = 1; i <= pgCount; i++) {
+            for (let i = 1; i <= pgCount; i++) {
                 pages[i].style.marginLeft = "";
                 pages[i].style.marginTop = "";
 
@@ -624,9 +627,9 @@
             return [curPg];
         };
 
-        var updateClasses = function(pg) {
+        const updateClasses = function(pg) {
             /*jshint loopfunc: true */
-            for (var i = 1; i <= pgCount; i++) {
+            for (let i = 1; i <= pgCount; i++) {
                 ClassHelper.removeClass(pages[i], 'current', 'prev', 'next', 'before', 'after');
                 delete pages[i].dataset.visible;
 
@@ -648,19 +651,19 @@
         };
 
         Presentation.updateLayout = function() {
-            var zoom = ZoomManager.getZoom();
-            var pageWidth = Math.floor(bounds[curPg - 1][0] * zoom);
-            var marginLeft = 0;
-            var viewPortWidth = mainContainer.clientWidth - (paddingX * 2);
+            const zoom = ZoomManager.getZoom();
+            const pageWidth = Math.floor(bounds[curPg - 1][0] * zoom);
+            let marginLeft = 0;
+            let viewPortWidth = mainContainer.clientWidth - (paddingX * 2);
             if (viewPortWidth > pageWidth) {
                 marginLeft = (viewPortWidth - pageWidth) / 2;
             } else {
                 viewPortWidth = pageWidth;
             }
 
-            var pageHeight = Math.floor(bounds[curPg - 1][1] * zoom);
-            var marginTop = 0;
-            var viewPortHeight = mainContainer.clientHeight - (paddingY * 2);
+            const pageHeight = Math.floor(bounds[curPg - 1][1] * zoom);
+            let marginTop = 0;
+            let viewPortHeight = mainContainer.clientHeight - (paddingY * 2);
             if (viewPortHeight > pageHeight) {
                 marginTop = (viewPortHeight - pageHeight) / 2;
             } else {
@@ -671,7 +674,7 @@
             pageContainer.style.height = viewPortHeight + "px";
 
             // Will be wrong if not all pages same size
-            for (var i = 1; i <= pgCount; i++) {
+            for (let i = 1; i <= pgCount; i++) {
                 pages[i].style.marginLeft = marginLeft + "px";
                 pages[i].style.marginTop = marginTop + "px";
             }
@@ -708,8 +711,8 @@
     })());
 
     LayoutManager.addLayout(IDR.LAYOUT_MAGAZINE, (function() {
-        var Magazine = { },
-            allPagesSameSize,
+        const Magazine = { };
+        let allPagesSameSize,
             isDirectionR2L;
 
         function isDoubleSpread(page) {
@@ -723,7 +726,7 @@
 
         Magazine.unload = function() {
             /*jshint loopfunc: true */
-            for (var i = 1; i <= pgCount; i++) {
+            for (let i = 1; i <= pgCount; i++) {
                 pages[i].style.marginLeft = "";
                 pages[i].style.marginTop = "";
 
@@ -750,16 +753,16 @@
         };
 
         Magazine.getVisiblePages = function() {
-            var visiblePages = [curPg];
+            const visiblePages = [curPg];
             if (isDoubleSpread(curPg)) {
                 visiblePages.push(curPg + 1);
             }
             return visiblePages;
         };
 
-        var updateClasses = function(pg) {
+        const updateClasses = function(pg) {
             /*jshint loopfunc: true */
-            for (var i = 1; i <= pgCount; i++) {
+            for (let i = 1; i <= pgCount; i++) {
                 ClassHelper.removeClass(pages[i], 'current', 'prev', 'next', 'before', 'after');
                 delete pages[i].dataset.visible;
             }
@@ -790,30 +793,30 @@
             }
 
             if (pg + 4 <= pgCount) {
-                for (i = pg + 4; i <= pgCount; i++) {
+                for (let i = pg + 4; i <= pgCount; i++) {
                     ClassHelper.addClass(pages[i], 'after');
                 }
             }
             if (pg - 3 > 0) {
-                for (i = pg - 3; i > 0; i--) {
+                for (let i = pg - 3; i > 0; i--) {
                     ClassHelper.addClass(pages[i], 'before');
                 }
             }
         };
 
         Magazine.updateLayout = function() {
-            var isTwoPages = isDoubleSpread(curPg);
-            var zoom = ZoomManager.getZoom();
+            const isTwoPages = isDoubleSpread(curPg);
+            const zoom = ZoomManager.getZoom();
 
             // Calculate left margins & viewPortWidth
-            var pageWidthA = Math.floor(bounds[curPg - 1][0] * zoom);
-            var pageWidthB = isTwoPages ? Math.floor(bounds[curPg][0] * zoom) : pageWidthA;
-            var pageWidth = 2 * Math.max(pageWidthA, pageWidthB);
-            var viewPortWidth = Math.max(pageWidth, mainContainer.clientWidth - (paddingX * 2));
+            const pageWidthA = Math.floor(bounds[curPg - 1][0] * zoom);
+            const pageWidthB = isTwoPages ? Math.floor(bounds[curPg][0] * zoom) : pageWidthA;
+            const pageWidth = 2 * Math.max(pageWidthA, pageWidthB);
+            const viewPortWidth = Math.max(pageWidth, mainContainer.clientWidth - (paddingX * 2));
 
-            var centerX = Math.floor(viewPortWidth / 2);
-            var marginLeftA = centerX;
-            var marginLeftB = centerX;
+            const centerX = Math.floor(viewPortWidth / 2);
+            let marginLeftA = centerX;
+            let marginLeftB = centerX;
 
             if (isDirectionR2L) {
                 marginLeftB -= pageWidthB; // B|A
@@ -822,11 +825,11 @@
             }
 
             // Calculate top margins & viewPortHeight
-            var pageHeightA = Math.floor(bounds[curPg - 1][1] * zoom);
-            var pageHeightB = isTwoPages ? Math.floor(bounds[curPg][1] * zoom) : pageHeightA;
-            var viewPortHeight = Math.max(pageHeightA, pageHeightB, mainContainer.clientHeight - (paddingY * 2));
-            var marginTopA = Math.floor((viewPortHeight - (isDirectionR2L ? pageHeightB : pageHeightA)) / 2);
-            var marginTopB = Math.floor((viewPortHeight - (isDirectionR2L ? pageHeightA : pageHeightB)) / 2);
+            const pageHeightA = Math.floor(bounds[curPg - 1][1] * zoom);
+            const pageHeightB = isTwoPages ? Math.floor(bounds[curPg][1] * zoom) : pageHeightA;
+            const viewPortHeight = Math.max(pageHeightA, pageHeightB, mainContainer.clientHeight - (paddingY * 2));
+            const marginTopA = Math.floor((viewPortHeight - (isDirectionR2L ? pageHeightB : pageHeightA)) / 2);
+            const marginTopB = Math.floor((viewPortHeight - (isDirectionR2L ? pageHeightA : pageHeightB)) / 2);
 
             // Apply viewport sizes & margins
             // We need to adjust all pages because other pages may become visible if transitions are used and the
@@ -839,7 +842,7 @@
             pages[1].style.marginLeft = marginLeftB + "px";
             pages[1].style.marginTop = marginTopB + "px";
 
-            for (var i = 2; i <= pgCount; i += 2) {
+            for (let i = 2; i <= pgCount; i += 2) {
                 pages[i].style.marginLeft = marginLeftA + "px";
                 pages[i].style.marginTop = marginTopA + "px";
                 if (i < pgCount) {
@@ -854,11 +857,11 @@
         };
 
         Magazine.getZoomBounds = function() {
-            var isTwoPages = isDoubleSpread(curPg);
-            var pageWidthA = Math.floor(bounds[curPg - 1][0]);
-            var pageWidthB = isTwoPages ? Math.floor(bounds[curPg][0]) : 0;
-            var pageHeightA = Math.floor(bounds[curPg - 1][1]);
-            var pageHeightB = isTwoPages ? Math.floor(bounds[curPg][1]) : 0;
+            const isTwoPages = isDoubleSpread(curPg);
+            const pageWidthA = Math.floor(bounds[curPg - 1][0]);
+            const pageWidthB = isTwoPages ? Math.floor(bounds[curPg][0]) : 0;
+            const pageHeightA = Math.floor(bounds[curPg - 1][1]);
+            const pageHeightB = isTwoPages ? Math.floor(bounds[curPg][1]) : 0;
             return {
                 width: 2 * Math.max(pageWidthA, pageWidthB),
                 height: Math.max(pageHeightA, pageHeightB)
@@ -885,15 +888,15 @@
     })());
 
     LayoutManager.addLayout(IDR.LAYOUT_CONTINUOUS, (function() {
-        var Continuous = { },
-            largestWidth = 0,
+        const Continuous = { };
+        let largestWidth = 0,
             largestHeight = 0,
             visiblePages = [];
 
         Continuous.setup = function() {
             mainContainer.addEventListener('scroll', scrollEvent);
 
-            for (var i = 0; i < pgCount; i++) {
+            for (let i = 0; i < pgCount; i++) {
                 if (bounds[i][0] > largestWidth) {
                     largestWidth = bounds[i][0];
                 }
@@ -907,21 +910,21 @@
             mainContainer.removeEventListener('scroll', scrollEvent);
         };
 
-        var scrollEvent = function() {
+        const scrollEvent = function() {
             LoadManager.stopLoading();
             scrollUpdate();
         };
 
-        var scrollUpdate = function() {
-            var i, y;
+        const scrollUpdate = function() {
+            let i, y;
 
             if (pages[1].getBoundingClientRect().top > 0) {
                 LayoutManager.updatePage(1);
             } else {
                 for (i = 1; i <= pgCount; i++) {
-                    var bounds = pages[i].getBoundingClientRect();
+                    const bounds = pages[i].getBoundingClientRect();
                     y = bounds.top;
-                    var height = bounds.bottom - bounds.top;
+                    const height = bounds.bottom - bounds.top;
 
                     if (y <= height*0.25 && y > -height*0.5) {
                         LayoutManager.updatePage(i);
@@ -932,15 +935,16 @@
             setVisiblePages();
         };
 
-        var setVisiblePages = function() {
+        const setVisiblePages = function() {
             visiblePages.forEach(page => {
                 delete pages[page].dataset.visible;
             });
 
             visiblePages = [curPg];
-            var i, bounds, viewPortHeight = mainContainer.clientHeight;
+            let i, bounds;
+            const viewPortHeight = mainContainer.clientHeight;
 
-            var isPageVisible = function(page) {
+            const isPageVisible = function(page) {
                 bounds = pages[page].getBoundingClientRect();
                 return bounds.bottom > 0 && bounds.top < viewPortHeight;
             };
@@ -958,10 +962,10 @@
         };
 
         Continuous.goToPage = function(pg, location) {
-            var offset = 0;
+            let offset = 0;
 
             if (location) {
-                var locationArr = location.split(" ");
+                const locationArr = location.split(" ");
                 switch(locationArr[0]) {
                     case "XYZ":
                         offset = Number(locationArr[2]);
@@ -984,7 +988,7 @@
                 }
             }
 
-            var zoom = ZoomManager.getZoom();
+            const zoom = ZoomManager.getZoom();
             mainContainer.scrollTop = pages[pg].offsetTop - paddingY + (offset * zoom);
             LayoutManager.updatePage(pg);
             setVisiblePages();
@@ -1038,9 +1042,9 @@
     /**
      * @name InstallTrigger
      */
-    var SelectionManager = (function() {
-        var Selection = { },
-            mouseX,
+    const SelectionManager = (function() {
+        const Selection = { };
+        let mouseX,
             mouseY,
             isMouseDown = false,
             defaultMode,
@@ -1078,7 +1082,7 @@
             overlay.removeEventListener("mousemove", handleMouseMove);
         };
 
-        var handleMouseDown = function(e) {
+        const handleMouseDown = function(e) {
             e = e || window.event;
             ClassHelper.addClass(overlay, "mousedown");
             mouseX = e.clientX;
@@ -1087,12 +1091,12 @@
             return false;
         };
 
-        var handleMouseUp = function() {
+        const handleMouseUp = function() {
             ClassHelper.removeClass(overlay, "mousedown");
             isMouseDown = false;
         };
 
-        var handleMouseMove = function(e) {
+        const handleMouseMove = function(e) {
             if (isMouseDown) {
                 e = e || window.event;
                 mainContainer.scrollLeft = mainContainer.scrollLeft + mouseX - e.clientX;
@@ -1138,19 +1142,19 @@
         }
     };
 
-    var ZoomManager = (function() {
-        var exports = {},
-            zoomType = IDR.ZOOM_AUTO,
-            lastRulePosition,
+    const ZoomManager = (function() {
+        const exports = {},
             zoomValues = [0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4],
-            namedZoomValues = [IDR.ZOOM_AUTO, IDR.ZOOM_FITPAGE, IDR.ZOOM_FITHEIGHT, IDR.ZOOM_FITWIDTH, IDR.ZOOM_ACTUALSIZE],
+            namedZoomValues = [IDR.ZOOM_AUTO, IDR.ZOOM_FITPAGE, IDR.ZOOM_FITHEIGHT, IDR.ZOOM_FITWIDTH, IDR.ZOOM_ACTUALSIZE];
+        let zoomType = IDR.ZOOM_AUTO,
+            lastRulePosition,
             zoomCount = 0,
             styleSheet,
             zoom = 1,
             defaultZoom;
 
         exports.setup = function() {
-            var styleElement = document.createElement('style');
+            const styleElement = document.createElement('style');
             styleElement.setAttribute('type', 'text/css');
             document.head.appendChild(styleElement);
             styleSheet = styleElement.sheet;
@@ -1160,8 +1164,8 @@
             updateZoom(defaultZoom);
         };
 
-        var setTransform = function(element, x, y, scale, hardwareAccelerate) {
-            var transform;
+        const setTransform = function(element, x, y, scale, hardwareAccelerate) {
+            let transform;
             if (hardwareAccelerate) {
                 transform = "translate3d(" + x + "px, " + y + "px, 0) scale(" + scale + ")";
             } else {
@@ -1173,12 +1177,12 @@
                 "transform: " + transform + ";";
         };
 
-        var updateZoom = function(value) {
+        const updateZoom = function(value) {
             LoadManager.stopLoading();
 
             zoom = calculateZoomValue(value);
 
-            var isMinZoom = false, isMaxZoom = false;
+            let isMinZoom = false, isMaxZoom = false;
 
             if (zoom >= zoomValues[zoomValues.length - 1]) {
                 zoom = zoomValues[zoomValues.length - 1];
@@ -1188,12 +1192,12 @@
                 isMinZoom = true;
             }
 
-            var scrollRatio = mainContainer.scrollTop / mainContainer.scrollHeight;
+            const scrollRatio = mainContainer.scrollTop / mainContainer.scrollHeight;
 
             layout.updateLayout();
 
-            var visiblePages = layout.getVisiblePages();
-            for (var j = 1; j <= pgCount; j++) {
+            const visiblePages = layout.getVisiblePages();
+            for (let j = 1; j <= pgCount; j++) {
                 if (visiblePages.indexOf(j) === -1) {
                     LoadManager.hide(j);
                 }
@@ -1203,10 +1207,10 @@
                 styleSheet.deleteRule(lastRulePosition);
             }
 
-            var transform = setTransform(null, 0, 0, zoom, false);
+            const transform = setTransform(null, 0, 0, zoom, false);
             lastRulePosition = styleSheet.insertRule(".page-inner { \n" + transform + "\n}", styleSheet.cssRules.length);
 
-            for (var i = 0; i < pgCount; i++) {
+            for (let i = 0; i < pgCount; i++) {
                 pages[i + 1].style.width = Math.floor(bounds[i][0] * zoom) + "px";
                 pages[i + 1].style.height = Math.floor(bounds[i][1] * zoom) + "px";
             }
@@ -1226,18 +1230,18 @@
             });
         };
 
-        var calculateNextZoom = function() {
-            var oldZoom = zoom;
-            var newZoom = zoomValues[zoomValues.length - 1];
-            for (var i = 0; i < zoomValues.length; i++) {
+        const calculateNextZoom = function() {
+            const oldZoom = zoom;
+            let newZoom = zoomValues[zoomValues.length - 1];
+            for (let i = 0; i < zoomValues.length; i++) {
                 if (zoomValues[i] > oldZoom) {
                     newZoom = zoomValues[i];
                     break;
                 }
             }
-            var bestNamedValue;
-            for (i = 0; i < namedZoomValues.length; i++) {
-                var value = calculateZoomValue(namedZoomValues[i]);
+            let bestNamedValue;
+            for (let i = 0; i < namedZoomValues.length; i++) {
+                const value = calculateZoomValue(namedZoomValues[i]);
                 if (value > oldZoom && value <= newZoom) {
                     if (bestNamedValue && value === newZoom) {
                         continue; // If multiple named values correspond to the same zoom level then use the earliest
@@ -1249,18 +1253,18 @@
             return bestNamedValue || newZoom;
         };
 
-        var calculatePrevZoom = function() {
-            var oldZoom = zoom;
-            var newZoom = zoomValues[0];
-            for (var i = zoomValues.length - 1; i >= 0; i--) {
+        const calculatePrevZoom = function() {
+            const oldZoom = zoom;
+            let newZoom = zoomValues[0];
+            for (let i = zoomValues.length - 1; i >= 0; i--) {
                 if (zoomValues[i] < oldZoom) {
                     newZoom = zoomValues[i];
                     break;
                 }
             }
-            var bestNamedValue;
-            for (i = 0; i < namedZoomValues.length; i++) {
-                var value = calculateZoomValue(namedZoomValues[i]);
+            let bestNamedValue;
+            for (let i = 0; i < namedZoomValues.length; i++) {
+                const value = calculateZoomValue(namedZoomValues[i]);
                 if (value < oldZoom && value >= newZoom) {
                     if (bestNamedValue && value === newZoom) {
                         continue; // If multiple named values correspond to the same zoom level then use the earliest
@@ -1272,12 +1276,12 @@
             return bestNamedValue || newZoom;
         };
 
-        var calculateZoomValue = function(value) {
-            var zoomBounds = layout.getZoomBounds();
-            var fitWidthZoom = (mainContainer.clientWidth - (paddingX * 2)) / zoomBounds.width;
-            var fitHeightZoom = (mainContainer.clientHeight - (paddingY * 2)) / zoomBounds.height;
+        const calculateZoomValue = function(value) {
+            const zoomBounds = layout.getZoomBounds();
+            const fitWidthZoom = (mainContainer.clientWidth - (paddingX * 2)) / zoomBounds.width;
+            const fitHeightZoom = (mainContainer.clientHeight - (paddingY * 2)) / zoomBounds.height;
 
-            var zoomValue = parseFloat(value);
+            const zoomValue = parseFloat(value);
             if (!isNaN(zoomValue)) {
                 zoom = zoomValue;
                 value = IDR.ZOOM_SPECIFIC;
@@ -1374,7 +1378,7 @@
 
     /* EventManager */
     (function() {
-        var events = {};
+        const events = {};
 
         IDR.on = function(eventType, eventListener) {
             if (!events[eventType]) {
@@ -1387,7 +1391,7 @@
 
         IDR.off = function(eventType, eventListener) {
             if (events[eventType]) {
-                var index = events[eventType].indexOf(eventListener);
+                const index = events[eventType].indexOf(eventListener);
                 if (index !== -1) {
                     events[eventType].splice(index, 1);
                 }
@@ -1403,11 +1407,11 @@
         };
     })();
 
-    var ClassHelper = (function() {
+    const ClassHelper = (function() {
         return {
             addClass: function(ele, name) {
-                var classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
-                var index = classes.indexOf(name);
+                const classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
+                const index = classes.indexOf(name);
                 if (index === -1) {
                     classes.push(name);
                     ele.className = classes.join(" ");
@@ -1415,11 +1419,11 @@
             },
 
             removeClass: function() {
-                var ele = arguments[0];
-                var classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
+                const ele = arguments[0];
+                const classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
 
-                for (var i = 1; i < arguments.length; i++) {
-                    var index = classes.indexOf(arguments[i]);
+                for (let i = 1; i < arguments.length; i++) {
+                    const index = classes.indexOf(arguments[i]);
                     if (index !== -1) {
                         classes.splice(index, 1);
                     }

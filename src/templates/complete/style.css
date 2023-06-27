@@ -5,11 +5,18 @@ body {
 
 /* Viewer panel */
 #idrviewer {
+    transition-timing-function: ease;
+    transition-duration: 200ms;
     top: 45px;
     bottom: 0;
     left: 0;
     right: 0;
     position: absolute;
+}
+@media (min-width: 800px) {
+    .sidebar-open #idrviewer {
+        left: 350px;
+    }
 }
 .light-theme #idrviewer {
     background: #fafafa none repeat scroll 0 0;
@@ -166,7 +173,7 @@ body:not(:fullscreen) .icon-fullscreen-exit {
     left: -350px;
     width: 350px;
 }
-#sidebar.open {
+.sidebar-open #sidebar {
     left: 0;
 }
 #sidebar-controls {
