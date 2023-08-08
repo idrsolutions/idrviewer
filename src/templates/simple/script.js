@@ -6,15 +6,15 @@
      * @param id
      * @returns {Element}
      */
-    var d = function (id) {
+    const d = function (id) {
         return document.getElementById(id);
     };
 
-    var ClassHelper = (function() {
+    const ClassHelper = (function() {
         return {
             addClass: function(ele, name) {
-                var classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
-                var index = classes.indexOf(name);
+                const classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
+                const index = classes.indexOf(name);
                 if (index === -1) {
                     classes.push(name);
                     ele.className = classes.join(" ");
@@ -22,8 +22,8 @@
             },
 
             removeClass: function(ele, name) {
-                var classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
-                var index = classes.indexOf(name);
+                const classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
+                const index = classes.indexOf(name);
                 if (index !== -1) {
                     classes.splice(index, 1);
                 }
@@ -32,7 +32,7 @@
         };
     })();
 
-    var Button = {};
+    const Button = {};
 
     IDRViewer.on('ready', function(data) {
         // Grab buttons
@@ -42,7 +42,7 @@
         Button.zoomOut = d('btnZoomOut');
 
         document.title = data.title ? data.title : data.fileName;
-        var pageLabels = data.pageLabels;
+        const pageLabels = data.pageLabels;
         d('btnPage').innerHTML = pageLabels.length ? pageLabels[data.page - 1] : data.page;
         d('btnPage').title = data.page + " of " + data.pagecount;
 
@@ -103,14 +103,14 @@
             }
         });
 
-        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
         // Setup controls hiding after 1s of inactivity
         // Disable if local as iframes used for pages which absorb mousemove events and break this behavior
         if (!isMobile && window.location.protocol !== 'file:' && data.pageType !== 'svg') {
-            var mouseOverControls = false;
-            var controls = d('controls');
-            var timer;
+            let mouseOverControls = false;
+            const controls = d('controls');
+            let timer;
             controls.addEventListener('mouseenter', function () {
                 mouseOverControls = true;
             });

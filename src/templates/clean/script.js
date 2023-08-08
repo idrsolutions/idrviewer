@@ -6,15 +6,15 @@
      * @param id
      * @returns {Element}
      */
-    var d = function (id) {
+    const d = function (id) {
         return document.getElementById(id);
     };
 
-    var ClassHelper = (function() {
+    const ClassHelper = (function() {
         return {
             addClass: function(ele, name) {
-                var classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
-                var index = classes.indexOf(name);
+                const classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
+                const index = classes.indexOf(name);
                 if (index === -1) {
                     classes.push(name);
                     ele.className = classes.join(" ");
@@ -22,8 +22,8 @@
             },
 
             removeClass: function(ele, name) {
-                var classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
-                var index = classes.indexOf(name);
+                const classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
+                const index = classes.indexOf(name);
                 if (index !== -1) {
                     classes.splice(index, 1);
                 }
@@ -32,14 +32,14 @@
         };
     })();
 
-    var Button = {};
+    const Button = {};
 
-    var navHelper = (function() {
+    const navHelper = (function() {
         return {
             swapNavButtonsForR2L: function () {
                 Button.next.parentNode.insertBefore(Button.prev, Button.next);
                 Button.prev.parentNode.insertBefore(Button.next, Button.prev.parentNode.firstChild);
-                var nextInnerHtml = Button.next.innerHTML;
+                const nextInnerHtml = Button.next.innerHTML;
                 Button.next.innerHTML = Button.prev.innerHTML;
                 Button.prev.innerHTML = nextInnerHtml;
             }
@@ -57,7 +57,7 @@
 
         document.title = data.title ? data.title : data.fileName;
         d('title').innerHTML = document.title;
-        var pageLabels = data.pageLabels;
+        const pageLabels = data.pageLabels;
         d('btnPage').innerHTML = pageLabels.length ? pageLabels[data.page - 1] : data.page;
 
         Button.prev.onclick = function(e) { IDRViewer.prev(); e.preventDefault(); };

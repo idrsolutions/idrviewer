@@ -1,6 +1,10 @@
 Complete UI Changelog
 ---------------------
 
+3.3.0 (08 Aug 2023)
+- Added translations for Danish/Greek/Spanish/Croatian/Hungarian/Russian/Ukrainian/Simplified Chinese
+- Remove lang attribute on HTML tag as it may not represent the language of the displayed document
+
 3.2.0 (27 Jun 2023)
 - Keyboard nav / tab order improvements
 - Updated sidebar to not cover the pages when open (except on small screens)

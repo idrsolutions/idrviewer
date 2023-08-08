@@ -30,7 +30,7 @@ See [IDRViewer JavaScript API](https://support.idrsolutions.com/buildvu/api-docu
 ## Annotations JSON API
 See [Annotations JSON API](https://support.idrsolutions.com/buildvu/api-documents/annotations-json-api)
 
-## Grunt Tasks
+## NPM Tasks
 1. Install [node.js](https://nodejs.org/)
 2. Open terminal/command prompt & cd into idrviewer
 3. Run `npm install`

@@ -3,15 +3,15 @@
  * @param id
  * @returns {Element}
  */
-var d = function (id) {
+const d = function (id) {
     return document.getElementById(id);
 };
 
-var ClassHelper = (function() {
+const ClassHelper = (function() {
     return {
         addClass: function(ele, name) {
-            var classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
-            var index = classes.indexOf(name);
+            const classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
+            const index = classes.indexOf(name);
             if (index === -1) {
                 classes.push(name);
                 ele.className = classes.join(" ");
@@ -19,8 +19,8 @@ var ClassHelper = (function() {
         },
 
         removeClass: function(ele, name) {
-            var classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
-            var index = classes.indexOf(name);
+            const classes = ele.className.length !== 0 ? ele.className.split(" ") : [];
+            const index = classes.indexOf(name);
             if (index !== -1) {
                 classes.splice(index, 1);
             }
@@ -34,14 +34,14 @@ var ClassHelper = (function() {
 
     IDRViewer.setLayout(IDRViewer.LAYOUT_PRESENTATION);
 
-    var Button = {};
+    const Button = {};
 
-    var navHelper = (function() {
+    const navHelper = (function() {
         return {
             swapNavButtonsForR2L: function () {
                 Button.next.parentNode.insertBefore(Button.prev, Button.next);
                 Button.prev.parentNode.insertBefore(Button.next, Button.prev.parentNode.firstChild);
-                var nextInnerHtml = Button.next.innerHTML;
+                const nextInnerHtml = Button.next.innerHTML;
                 Button.next.innerHTML = Button.prev.innerHTML;
                 Button.prev.innerHTML = nextInnerHtml;
             }
@@ -54,10 +54,10 @@ var ClassHelper = (function() {
         Button.prev = d('btnPrev');
         Button.next = d('btnNext');
 
-        var pageLabels = data.pageLabels;
+        const pageLabels = data.pageLabels;
 
         function getPageString(page, pageCount) {
-            var result = page + " / " + pageCount;
+            let result = page + " / " + pageCount;
             if (pageLabels.length) {
                 result =  pageLabels[page - 1];
             }

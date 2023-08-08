@@ -504,7 +504,7 @@
             rect.setAttributeNS(null, "y", y);
             rect.setAttributeNS(null, "width", width);
             rect.setAttributeNS(null, "height", height);
-            rect.setAttributeNS(null, "fill", "yellow");
+            rect.setAttributeNS(null, "fill", "#FFFF0088");
             rect.setAttributeNS(null, "class", "highlight");
             rect.setAttributeNS(null, "data-index", makeIndexString(index));
             if (transform) rect.setAttributeNS(null, "transform", transform);
@@ -594,7 +594,7 @@
             for (const highlight of highlights) {
                 if (selected) {
                     highlight.classList.add("selected");
-                    highlight.style.fill = "orange";
+                    highlight.style.fill = "#FFA50088";
                 }
                 else {
                     highlight.classList.remove("selected");
