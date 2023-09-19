@@ -1,6 +1,11 @@
 IDRViewer Changelog
 -------------------
 
+1.20.1 (19 Sep 2023)
+- Allow audio RichMedia annotations to exceed the annotation width to ensure the player controls are usable
+- Load and play RichMedia annotations on the first click instead of requiring one click to load and another to play
+- Update dev dependencies
+
 1.20.0 (08 Aug 2023)
 - Add support for MPEG-2 video annotations (video will be downloaded as browsers lack playback support)
 - Fix search result highlighting obscuring highlighted text when text is transparent in SVG (OCR or shapetext modes)

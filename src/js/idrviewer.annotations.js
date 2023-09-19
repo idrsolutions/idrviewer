@@ -360,10 +360,15 @@
                 const isVideo = data.richmedia[0].type.startsWith("video");
                 const newElement = document.createElement(isVideo ? "video" : "audio");
                 newElement.setAttribute("style", "position: absolute; object-fit: fill; pointer-events: auto;");
-                newElement.setAttribute("controls", "controls");
+                newElement.setAttribute("controls", "");
+                newElement.setAttribute("autoplay", "");
                 newElement.style.left = data.bounds[0] + "px";
                 newElement.style.top = data.bounds[1] + "px";
-                newElement.style.width = data.bounds[2] + "px";
+                if (isVideo) {
+                    newElement.style.width = data.bounds[2] + "px";
+                } else {
+                    newElement.style.minWidth = data.bounds[2] + "px";
+                }
                 newElement.style.height = data.bounds[3] + "px";
                 newElement.title = data.type;
                 newElement.dataset.objref = data.objref;
