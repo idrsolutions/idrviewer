@@ -5,12 +5,12 @@ The IDRViewer is a pure HTML/JavaScript/CSS viewer designed to display PDF and O
 The IDRViewer is the component responsible for loading and displaying the pages in the web browser. It also handles functionality such as zoom, page layouts, and selection mode.
 
 ## UI Templates
-We also provide a number of user-interfaces that can be used as provided or used as a starting point for building your own user interface.
+We also provide a number of user-interfaces that can be used as provided or used as a starting point for building your own user interface. The templates are built using webpack (see NPM Tasks below).
 
-- Complete UI ([source](examples/complete/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/complete/))
-- Clean UI ([source](examples/clean/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/clean/))
-- Simple UI ([source](examples/simple/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/simple/))
-- Slideshow UI ([source](examples/slideshow/index.html), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/slideshow/))
+- Complete UI ([source](src/templates/complete/), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/complete/))
+- Clean UI ([source](src/templates/clean/), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/clean/))
+- Simple UI ([source](src/templates/simple/), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/simple/))
+- Slideshow UI ([source](src/templates/slideshow/), [demo](https://files.idrsolutions.com/Examples/IDRViewerUI/slideshow/))
 
 ## Project Structure
 ```

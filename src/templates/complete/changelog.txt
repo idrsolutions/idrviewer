@@ -1,6 +1,9 @@
 Complete UI Changelog
 ---------------------
 
+3.3.1 (31 Oct 2023)
+- Fixed flash of blank page when navigating in Magazine and Presentation layouts when transitions are used
+
 3.3.0 (08 Aug 2023)
 - Added translations for Danish/Greek/Spanish/Croatian/Hungarian/Russian/Ukrainian/Simplified Chinese
 - Remove lang attribute on HTML tag as it may not represent the language of the displayed document

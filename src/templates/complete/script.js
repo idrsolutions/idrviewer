@@ -855,7 +855,10 @@
         document.title = data.title ? data.title : data.fileName; // Set title
 
         // Trigger a relayout when opening/closing the sidebar changes the viewport bounds
-        d('idrviewer').addEventListener("transitionend", function() {
+        d('idrviewer').addEventListener('transitionend', function(event) {
+            if (event.target.id !== 'idrviewer') {
+                return;
+            }
             IDRViewer.updateLayout();
         });
 
