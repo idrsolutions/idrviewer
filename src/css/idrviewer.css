@@ -66,12 +66,11 @@
 
 /* Highlight Style */
 .highlight {
-    color: black;
-    background-color: yellow;
+    background-color: #FFFF0088;
 }
 
 .highlight.selected {
-    background-color: orange;
+    background-color: #FFA50088;
 }
 
 /* Presentation Layout */

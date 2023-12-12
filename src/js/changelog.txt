@@ -1,6 +1,11 @@
 IDRViewer Changelog
 -------------------
 
+1.21.0 (12 Dec 2023)
+- Update search result highlighting implementation to support new blank fonts BuildVu feature
+- Add a hover appearance for link annotations
+- Update dev dependencies
+
 1.20.2 (31 Oct 2023)
 - Update dev dependencies
 

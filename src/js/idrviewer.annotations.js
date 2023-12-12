@@ -189,7 +189,12 @@
             }
         };
 
+        LinkActionHandler.onmouseout = function() {
+            this.style.backgroundColor = "";
+        };
+
         LinkActionHandler.onmouseover = function(data) {
+            this.style.backgroundColor = "rgba(255, 255, 0, 0.25)";
             if (data.action && data.action.type !== "URI") {
                 this.style.cursor = "pointer";
             }
@@ -233,7 +238,7 @@
             }
         };
 
-        ActionHandler.register(["Link", "Widget", "TextLink"], ["click", "mouseover", "setup"], LinkActionHandler);
+        ActionHandler.register(["Link", "Widget", "TextLink"], ["click", "mouseover", "mouseout", "setup"], LinkActionHandler);
     })();
 
     (function() {
