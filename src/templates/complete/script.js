@@ -536,11 +536,20 @@
 
                     const toggle = document.createElement("div");
                     toggle.classList.add("toggle");
+                    toggle.tabIndex = 0;
                     bookmarkEle.prepend(toggle);
-                    toggle.addEventListener('click', function(event) {
+                    const toggleChildren = () => bookmarkEle.classList.toggle("open");
+                    toggle.addEventListener('click', event => {
                         event.preventDefault();
                         event.stopPropagation();
-                        this.parentElement.classList.toggle("open");
+                        toggleChildren();
+                    });
+                    toggle.addEventListener('keypress', event => {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            toggleChildren();
+                        }
                     });
 
                     addBookmark(bookmarkEle, bookmark.children);

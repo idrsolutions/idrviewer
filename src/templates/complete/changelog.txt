@@ -1,6 +1,9 @@
 Complete UI Changelog
 ---------------------
 
+3.3.2 (23 Jan 2024)
+- Improved keyboard accessibility of the bookmarks panel (allow children to be toggled using keyboard)
+
 3.3.1 (31 Oct 2023)
 - Fixed flash of blank page when navigating in Magazine and Presentation layouts when transitions are used
 
