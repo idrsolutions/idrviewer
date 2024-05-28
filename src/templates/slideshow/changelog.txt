@@ -1,6 +1,9 @@
 SlideShow UI Changelog
 ----------------------
 
+2.1.1 (28 May 2024)
+- Fixed pages not loading on mobile
+
 2.1.0 (16 May 2023)
 - Update to use SVG icons (remove the FontAwesome dependency)
 
