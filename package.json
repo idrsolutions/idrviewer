@@ -1,6 +1,6 @@
 {
   "name": "idrviewer",
-  "version": "1.21.4",
+  "version": "1.21.5",
   "description": "The IDRViewer is a viewer designed for documents converted using BuildVu",
   "keywords": [
     "idrsolutions",
@@ -37,14 +37,14 @@
     "webpack-watch": "npx webpack --watch"
   },
   "devDependencies": {
-    "@playwright/test": "^1.44.1",
+    "@playwright/test": "^1.45.1",
     "html-inline-script-webpack-plugin": "^3.2.1",
     "html-loader": "^5.0.0",
     "html-webpack-plugin": "^5.6.0",
     "http-server": "^14.1.1",
     "jshint": "^2.13.6",
-    "playwright": "^1.44.1",
-    "webpack": "^5.91.0",
+    "playwright": "^1.45.1",
+    "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4"
   }
 }
