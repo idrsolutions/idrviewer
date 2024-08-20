@@ -38,7 +38,7 @@ body {
 
 /* Menu bars */
 #controls {
-    height: 44px;
+    height: 45px;
     position: fixed;
     text-align: center;
     top: 0;
@@ -46,6 +46,7 @@ body {
     right: 0;
     display: flex;
     justify-content: space-between;
+    box-sizing: border-box;
 }
 #controls > div {
     display: flex;
@@ -74,7 +75,6 @@ body {
     background-color: transparent;
     display: inline-block;
     margin: 0 5px 0;
-    vertical-align: top;
     cursor: pointer;
 }
 .btn svg {
@@ -177,9 +177,10 @@ body:not(:fullscreen) .icon-fullscreen-exit {
     left: 0;
 }
 #sidebar-controls {
-    height: 44px;
+    height: 45px;
     display: flex;
     padding-left: 5px;
+    box-sizing: border-box;
 }
 #sidebar-content {
     top: 45px;

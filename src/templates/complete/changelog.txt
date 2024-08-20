@@ -1,6 +1,9 @@
 Complete UI Changelog
 ---------------------
 
+3.3.3 (20 Aug 2024)
+- Fixed subpixel line appearing between menu bar and viewer panel on devices with fractional app scaling
+
 3.3.2 (23 Jan 2024)
 - Improved keyboard accessibility of the bookmarks panel (allow children to be toggled using keyboard)
 

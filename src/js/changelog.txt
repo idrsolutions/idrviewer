@@ -1,6 +1,12 @@
 IDRViewer Changelog
 -------------------
 
+1.21.6 (20 Aug 2024)
+- Fix search highlighting failing after a page has unloaded
+- Fix "next search result" button not working when there are no results from the current page to the end
+- Fix "e.pageHandler is null" console error when repeatedly clicking the "prev search button" quickly
+- Update dev dependencies
+
 1.21.5 (09 Jul 2024)
 - Update dev dependencies
 

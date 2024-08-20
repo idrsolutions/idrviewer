@@ -1,4 +1,3 @@
-/*jshint esversion: 6 */
 (function() {
     "use strict";
 
@@ -26,44 +25,53 @@
     });
 
     IDRViewer.loadSearch = function(loadListener, progressListener) {
-        if (!textContent) {
-            if (isLocal) {
-                if (loadListener) { loadListener(false); }
-                return;
-            }
-
-            const request = new XMLHttpRequest();
-            request.open('GET', baseUrl + 'search.json', true);
-
-            if (progressListener) {
-                request.addEventListener('progress', function(event) {
-                    if (event.lengthComputable) {
-                        progressListener(Math.floor(event.loaded / event.total * 100));
-                    }
-                });
-            }
-
-            request.onload = function() {
-                if (request.status >= 200 && request.status < 400) {
-                    textContent = JSON.parse(request.responseText);
-
-                    IDRViewer.fire("searchready", {});
-                }
-                if (loadListener) { loadListener(!!textContent); }
-            };
-
-            request.onerror = function() {
-                if (loadListener) { loadListener(false); }
-            };
-
-            request.send();
-        } else { // Already loaded
+        if (textContent) {
             if (loadListener) {
-                setTimeout(function() {
+                setTimeout(function () {
                     loadListener(true);
                 }, 0);
             }
+
+            return;
         }
+
+        if (isLocal) {
+            if (loadListener) {
+                loadListener(false);
+            }
+            return;
+        }
+
+        const request = new XMLHttpRequest();
+        request.open('GET', baseUrl + 'search.json', true);
+
+        if (progressListener) {
+            request.addEventListener('progress', function (event) {
+                if (event.lengthComputable) {
+                    progressListener(Math.floor(event.loaded / event.total * 100));
+                }
+            });
+        }
+
+        request.onload = function () {
+            if (request.status >= 200 && request.status < 400) {
+                textContent = JSON.parse(request.responseText);
+
+                IDRViewer.fire("searchready", {});
+            }
+
+            if (loadListener) {
+                loadListener(!!textContent);
+            }
+        };
+
+        request.onerror = function () {
+            if (loadListener) {
+                loadListener(false);
+            }
+        };
+
+        request.send();
     };
 
     let resultsLimit;
@@ -120,9 +128,9 @@
     };
 
     IDRViewer.nextSearchResult = function() {
-        const result = selectedResult >= 0 ?
-            results[(selectedResult + 1) % results.length] :
-            results.find(result => result.page >= curPg);
+        const result = selectedResult >= 0
+            ? results[(selectedResult + 1) % results.length]
+            : results.find(result => result.page >= curPg) || results[0];
 
         if (!result) {
             console.warn("Failed to find next search result");
@@ -133,11 +141,11 @@
     };
 
     IDRViewer.prevSearchResult = function() {
-        const result = selectedResult >= 0 ?
-            results[(selectedResult - 1) >= 0 ? (selectedResult - 1) : results.length - 1] :
-            results.reduce((finalResult, result) => {
-                return result.page <= curPg ? result : finalResult;
-            });
+        const result = selectedResult >= 0
+            ? results[(selectedResult - 1) >= 0
+                ? (selectedResult - 1)
+                : results.length - 1]
+            : results.toReversed().find(result => result.page <= curPg) || results[results.length - 1];
 
         if (!result) {
             console.warn("Failed to find previous search result");
@@ -193,7 +201,9 @@
     });
 
     IDRViewer.on("pageunload", data => {
-        delete matches[data.page];
+        if (!matches.hasOwnProperty(data.page)) return;
+
+        matches[data.page].pageHandler = null;
         if (selectedMatch && selectedMatch.page === data.page) {
             clearSelectedMatch();
         }
@@ -201,33 +211,30 @@
 
     IDRViewer.on("searchready", () => {
         IDRViewer.on("pageload", function(page) {
-            if (matches.hasOwnProperty(page.page)) {
-                findSearchTermsInPage(document.querySelector("#page" + page.page));
+            if (!matches.hasOwnProperty(page.page)) return;
 
-                if (selectedMatch && selectedMatch.page === page.page) {
-                    matches[page.page].pageHandler.setMatchDescriptorSelected(selectedMatch.index, true);
-                }
+            findSearchTermsInPage(document.querySelector("#page" + page.page));
+            if (selectedMatch && selectedMatch.page === page.page) {
+                matches[page.page].pageHandler.setMatchDescriptorSelected(selectedMatch.index, true);
             }
         });
 
-        // Setup the polling logic for unloaded SVG Documents
+        // Set up the polling logic for unloaded SVG Documents
         if (pageHandler === SVGPageHandler) {
             setInterval(function() {
-                if (polling.length > 0) {
-                    // Only deal with one page per .5 seconds for performance reasons, more can likely be used to increase snappiness, a shorter interval is also an option
-                    let page = polling.shift();
+                if (polling.length <= 0) return;
 
-                    if (page) {
-                        if (page.querySelector("object").contentDocument.querySelector("text").getComputedTextLength() !== 0) {
-                            findSearchTermsInPage(page);
+                let page = polling.shift();
+                if (!page) return;
 
-                            if (selectedMatch && selectedMatch.page === page.page) {
-                                matches[page.page].pageHandler.setMatchDescriptorSelected(selectedMatch.index, true);
-                            }
-                        } else {
-                            polling.push(page);
-                        }
+                if (page.querySelector("object").contentDocument.querySelector("text").getComputedTextLength() !== 0) {
+                    findSearchTermsInPage(page);
+
+                    if (selectedMatch && selectedMatch.page === page.page) {
+                        matches[page.page].pageHandler.setMatchDescriptorSelected(selectedMatch.index, true);
                     }
+                } else {
+                    polling.push(page);
                 }
             }, 500);
         }
@@ -241,6 +248,7 @@
                 count: 1,
                 pageHandler: null
             };
+
             return acc;
         }, {});
 
@@ -303,7 +311,6 @@
         const search = JSON.parse(JSON.stringify(searchSettings));
 
         let searchOffset = 0;
-
         let matchDescriber = getEmptyMatchDescriber();
 
         search.searchTerm = handler.processSearchTerm(search.searchTerm);
@@ -382,54 +389,49 @@
                 }
 
                 if (elementOffset > 0) {
-                    // We never want to highlight part of an escape character, that will break the escape, so if we're in the middle of an escape character
-                    // we need to avoid saving the match describer
+                    // We never want to highlight part of an escape character, that will break the escape, so if we're
+                    // in the middle of an escape character we need to avoid saving the match describer
                     // (This is only necessary for short character strings (up to 4 characters long))
                     if (insideSpecial) {
                         matchDescriber = getEmptyMatchDescriber();
                         searchOffset = 0;
                         i++;
-                    } else {
-                        if (!matchDescriber.elements.length) {
-                            matchDescriber.beginning = i;
-
-                            for (const difference of differences) {
-                                if (matchDescriber.beginning > difference.index) {
-                                    if (matchDescriber.beginning < difference.index + difference.offset) {
-                                        matchDescriber.beginning -= (matchDescriber.beginning - difference.index);
-                                    } else {
-                                        matchDescriber.beginning -= difference.offset;
-                                    }
-                                } else {
-                                    break;
-                                }
-                            }
-                        }
-
-                        matchDescriber.elements.push(textElement);
-
-                        if (searchOffset === search.searchTerm.length) {
-                            matchDescriber.end = i + elementOffset;
-
-                            for (const difference of differences) {
-                                if (matchDescriber.end > difference.index) {
-                                    if (matchDescriber.end < difference.index + difference.offset) {
-                                        matchDescriber.end -= (matchDescriber.end - difference.index);
-                                    } else {
-                                        matchDescriber.end -= difference.offset;
-                                    }
-                                } else {
-                                    break;
-                                }
-                            }
-
-                            handler.storeDescriber(matchDescriber);
-                            searchOffset = 0;
-                            matchDescriber = getEmptyMatchDescriber();
-                        }
-
-                        i += elementOffset;
+                        continue;
                     }
+
+                    if (!matchDescriber.elements.length) {
+                        matchDescriber.beginning = i;
+
+                        for (const difference of differences) {
+                            if (matchDescriber.beginning <= difference.index) {
+                                break;
+                            }
+
+                            matchDescriber.beginning -= matchDescriber.beginning < difference.index + difference.offset
+                                ? (matchDescriber.beginning - difference.index)
+                                : difference.offset;
+                        }
+                    }
+
+                    matchDescriber.elements.push(textElement);
+
+                    if (searchOffset === search.searchTerm.length) {
+                        matchDescriber.end = i + elementOffset;
+
+                        for (const difference of differences) {
+                            if (matchDescriber.end <= difference.index) break;
+
+                            matchDescriber.end -= matchDescriber.end < difference.index + difference.offset
+                                ? (matchDescriber.end - difference.index)
+                                : difference.offset;
+                        }
+
+                        handler.storeDescriber(matchDescriber);
+                        searchOffset = 0;
+                        matchDescriber = getEmptyMatchDescriber();
+                    }
+
+                    i += elementOffset;
                 }
             }
         }
@@ -463,8 +465,7 @@
     function clearSelectedMatch() {
         if (Object.keys(matches) && selectedMatch) {
             const match = matches[selectedMatch.page];
-            if (match)
-                match.pageHandler.setMatchDescriptorSelected(selectedMatch.index, false);
+            match?.pageHandler?.setMatchDescriptorSelected(selectedMatch.index, false);
         }
 
         selectedMatch = null;
