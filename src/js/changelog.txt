@@ -1,6 +1,9 @@
 IDRViewer Changelog
 -------------------
 
+1.21.7 (01 Oct 2024)
+- Update dev dependencies
+
 1.21.6 (20 Aug 2024)
 - Fix search highlighting failing after a page has unloaded
 - Fix "next search result" button not working when there are no results from the current page to the end
