@@ -1,6 +1,14 @@
 IDRViewer Changelog
 -------------------
 
+1.21.8 (12 Nov 2024)
+- Fixes for magazine layout with magazine transition enabled when not all pages in document are the same size:
+    - Fix pages flashing white during magazine transition
+    - Fix irregularly sized pages poking out from behind others
+    - Fix improperly positioned pages when document is R2L
+- Remove unnecessary vendor prefixes in CSS
+- Update dev dependencies
+
 1.21.7 (01 Oct 2024)
 - Update dev dependencies
 

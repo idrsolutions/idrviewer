@@ -713,7 +713,8 @@
     LayoutManager.addLayout(IDR.LAYOUT_MAGAZINE, (function() {
         const Magazine = { };
         let allPagesSameSize,
-            isDirectionR2L;
+            isDirectionR2L,
+            visiblePages = []; // Pages that should remain visible during zoom/relayout
 
         function isDoubleSpread(page) {
             return page > 1 && page < pgCount;
@@ -753,10 +754,6 @@
         };
 
         Magazine.getVisiblePages = function() {
-            const visiblePages = [curPg];
-            if (isDoubleSpread(curPg)) {
-                visiblePages.push(curPg + 1);
-            }
             return visiblePages;
         };
 
@@ -766,12 +763,15 @@
                 ClassHelper.removeClass(pages[i], 'current', 'prev', 'next', 'before', 'after');
                 delete pages[i].dataset.visible;
             }
+            visiblePages = [];
 
             ClassHelper.addClass(pages[pg], 'current');
             pages[pg].dataset.visible = 'true';
+            visiblePages.push(pg);
             if (isDoubleSpread(pg)) {
                 ClassHelper.addClass(pages[pg + 1], 'current');
                 pages[pg + 1].dataset.visible = 'true';
+                visiblePages.push(pg + 1);
             }
 
             if (pg == 1) {
@@ -780,15 +780,19 @@
 
             if (pg + 2 <= pgCount) {
                 ClassHelper.addClass(pages[pg + 2], 'next');
+                visiblePages.push(pg + 2); // Seen during magazine transition
                 if (pg + 3 <= pgCount) {
                     ClassHelper.addClass(pages[pg + 3], 'next');
+                    visiblePages.push(pg + 3); // Seen during magazine transition
                 }
             }
 
             if (pg - 1 > 0) {
                 ClassHelper.addClass(pages[pg - 1], 'prev');
+                visiblePages.push(pg - 1); // Seen during magazine transition
                 if (pg - 2 > 0) {
                     ClassHelper.addClass(pages[pg - 2], 'prev');
+                    visiblePages.push(pg - 2); // Seen during magazine transition
                 }
             }
 
@@ -808,46 +812,36 @@
             const isTwoPages = isDoubleSpread(curPg);
             const zoom = ZoomManager.getZoom();
 
-            // Calculate left margins & viewPortWidth
-            const pageWidthA = Math.floor(bounds[curPg - 1][0] * zoom);
-            const pageWidthB = isTwoPages ? Math.floor(bounds[curPg][0] * zoom) : pageWidthA;
+            const getPageWidth = page => Math.floor(bounds[page - 1][0] * zoom);
+            const getPageHeight = page => Math.floor(bounds[page - 1][1] * zoom);
+
+            // Calculate viewPortWidth
+            const pageWidthA = getPageWidth(curPg);
+            const pageWidthB = isTwoPages ? getPageWidth(curPg + 1) : pageWidthA;
             const pageWidth = 2 * Math.max(pageWidthA, pageWidthB);
             const viewPortWidth = Math.max(pageWidth, mainContainer.clientWidth - (paddingX * 2));
-
-            const centerX = Math.floor(viewPortWidth / 2);
-            let marginLeftA = centerX;
-            let marginLeftB = centerX;
-
-            if (isDirectionR2L) {
-                marginLeftB -= pageWidthB; // B|A
-            } else {
-                marginLeftA -= pageWidthA; // A|B
-            }
-
-            // Calculate top margins & viewPortHeight
-            const pageHeightA = Math.floor(bounds[curPg - 1][1] * zoom);
-            const pageHeightB = isTwoPages ? Math.floor(bounds[curPg][1] * zoom) : pageHeightA;
-            const viewPortHeight = Math.max(pageHeightA, pageHeightB, mainContainer.clientHeight - (paddingY * 2));
-            const marginTopA = Math.floor((viewPortHeight - (isDirectionR2L ? pageHeightB : pageHeightA)) / 2);
-            const marginTopB = Math.floor((viewPortHeight - (isDirectionR2L ? pageHeightA : pageHeightB)) / 2);
-
-            // Apply viewport sizes & margins
-            // We need to adjust all pages because other pages may become visible if transitions are used and the
-            // viewport size changes (which would adjust the margins).
-            // If pages are not all the same size then pages will be visible anyway if transitions used because pages
-            // can't be hidden behind other pages if bounds are different.
             pageContainer.style.width = viewPortWidth + 'px';
+
+            // Calculate viewPortHeight
+            const pageHeightA = getPageHeight(curPg);
+            const pageHeightB = isTwoPages ? getPageHeight(curPg + 1) : pageHeightA;
+            const viewPortHeight = Math.max(pageHeightA, pageHeightB, mainContainer.clientHeight - (paddingY * 2));
             pageContainer.style.height = viewPortHeight + 'px';
 
-            pages[1].style.marginLeft = marginLeftB + "px";
-            pages[1].style.marginTop = marginTopB + "px";
-
-            for (let i = 2; i <= pgCount; i += 2) {
-                pages[i].style.marginLeft = marginLeftA + "px";
-                pages[i].style.marginTop = marginTopA + "px";
+            // Layout pages that are currently visible or will be visible during transitions
+            const centerX = Math.floor(viewPortWidth / 2);
+            const centerY = Math.floor(viewPortHeight / 2);
+            const currentPage = curPg === 1 ? 0 : curPg; // Normalise to left page
+            for (let i = Math.max(0, currentPage - 2); i <= Math.min(pgCount, currentPage + 2); i += 2) {
+                // Left page (right when R2L)
+                if (i > 0) {
+                    pages[i].style.marginLeft = (isDirectionR2L ? centerX : centerX - getPageWidth(i)) + "px";
+                    pages[i].style.marginTop = (centerY - Math.floor(getPageHeight(i) / 2)) + "px";
+                }
+                // Right page (left when R2L)
                 if (i < pgCount) {
-                    pages[i + 1].style.marginLeft = marginLeftB + "px";
-                    pages[i + 1].style.marginTop = marginTopB + "px";
+                    pages[i + 1].style.marginLeft = (isDirectionR2L ? centerX - getPageWidth(i + 1) : centerX) + "px";
+                    pages[i + 1].style.marginTop = (centerY - Math.floor(getPageHeight(i + 1) / 2)) + "px";
                 }
             }
         };

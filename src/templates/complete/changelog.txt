@@ -1,6 +1,9 @@
 Complete UI Changelog
 ---------------------
 
+3.3.4 (11 Nov 2024)
+- Fixed broken search nav button appearance caused by Firefox 132 regression (https://bugzilla.mozilla.org/show_bug.cgi?id=1926015)
+
 3.3.3 (20 Aug 2024)
 - Fixed subpixel line appearing between menu bar and viewer panel on devices with fractional app scaling
 

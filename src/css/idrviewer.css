@@ -23,8 +23,6 @@
 }
 
 .page-inner {
-    -webkit-transform-origin: top left;
-    -ms-transform-origin: top left;
     transform-origin: top left;
 }
 
@@ -38,7 +36,6 @@
     line-height: 0;
     margin: 0;
     padding: 0;
-    -webkit-overflow-scrolling: touch;
 }
 
 #overlay {
@@ -51,16 +48,10 @@
 
 #overlay.panning {
     visibility: visible;
-    cursor: all-scroll;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
     cursor: grab;
 }
 
 #overlay.panning.mousedown {
-    cursor: all-scroll;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
     cursor: grabbing;
 }
 
@@ -105,7 +96,6 @@
 
 /* Slide Transition */
 .layout-presentation.transition-slide .page {
-    -webkit-transition: opacity 0.2s, -webkit-transform 0.4s;
     transition: opacity 0.2s, transform 0.4s;
     opacity: 0;
     visibility: visible !important;
@@ -116,31 +106,24 @@
 }
 .layout-presentation.transition-slide .page.after {
     visibility: visible !important;
-    -webkit-transform: translateX(130%);
     transform: translateX(130%);
-    -webkit-transition-delay: 0.1s, 0s;
     transition-delay: 0.1s, 0s;
 }
 .layout-presentation.transition-slide .page.before {
     visibility: visible !important;
-    -webkit-transform: translateX(-130%);
     transform: translateX(-130%);
-    -webkit-transition-delay: 0.1s, 0s;
     transition-delay: 0.1s, 0s;
 }
 .isR2L.layout-presentation.transition-slide .page.after {
-    -webkit-transform: translateX(-130%);
     transform: translateX(-130%);
 }
 .isR2L.layout-presentation.transition-slide .page.before {
-    -webkit-transform: translateX(130%);
     transform: translateX(130%);
 }
 
 
 /* Fade Transition */
 .layout-presentation.transition-fade .page {
-    -webkit-transition: visibility 0.5s, opacity 0.5s;
     transition: visibility 0.5s, opacity 0.5s;
     opacity: 1;
 }
@@ -152,23 +135,17 @@
 
 /* Flip Transition */
 .layout-presentation.transition-flip > div > div {
-    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    -webkit-perspective: 1000px;
     perspective: 1000px;
 }
 .layout-presentation.transition-flip .page {
-    -webkit-transition: -webkit-transform 0.5s;
     transition: transform 0.5s;
-    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 .layout-presentation.transition-flip .page.before {
-    -webkit-transform: rotateY(-180deg);
     transform: rotateY(-180deg);
 }
 .layout-presentation.transition-flip .page.after {
-    -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
 }
 .layout-presentation.transition-flip .next,
@@ -179,9 +156,7 @@
 /* Throw Transition */
 .layout-presentation.transition-throw .page {
     opacity: 0;
-    -webkit-transition: -webkit-transform 0.5s, opacity 0.5s;
     transition: transform 0.5s, opacity 0.5s;
-    -webkit-transition-timing-function: ease-out;
     transition-timing-function: ease-out;
 }
 .layout-presentation.transition-throw .page.current {
@@ -195,16 +170,13 @@
     z-index: 4;
 }
 .layout-presentation.transition-throw .page.prev:nth-child(even) {
-    -webkit-transform: translate(100%, -100%) rotate(240deg);
     transform: translate(100%, -100%) rotate(240deg);
 }
 .layout-presentation.transition-throw .page.prev:nth-child(odd) {
-    -webkit-transform: translate(-100%, -100%) rotate(-240deg);
     transform: translate(-100%, -100%) rotate(-240deg);
 }
 .layout-presentation.transition-throw .page.next {
     visibility: visible !important;
-    -webkit-transform: none;
     transform: none;
     opacity: 1;
     z-index: 2;
@@ -212,25 +184,18 @@
 
 /* Magazine Transition */
 .layout-magazine.transition-magazine > div > div {
-    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    -webkit-perspective: 3000px;
     perspective: 3000px;
 }
 .layout-magazine.transition-magazine .page {
-    -webkit-transition: -webkit-transform 0.5s;
-    transition: transform 0.5s;
-    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 :not(.isR2L).layout-magazine.transition-magazine .page:nth-child(odd),
 .isR2L.layout-magazine.transition-magazine .page:nth-child(even) {
-    -webkit-transform-origin: left top 0;
     transform-origin: left top 0;
 }
 :not(.isR2L).layout-magazine.transition-magazine .page:nth-child(even),
 .isR2L.layout-magazine.transition-magazine .page:nth-child(odd) {
-    -webkit-transform-origin: right top 0;
     transform-origin: right top 0;
 }
 .layout-magazine.transition-magazine .page.current,
@@ -242,7 +207,6 @@
 .isR2L.layout-magazine.transition-magazine .page.prev:nth-child(even),
 .isR2L.layout-magazine.transition-magazine .page.after:nth-child(odd),
 .isR2L.layout-magazine.transition-magazine .page.before:nth-child(even) {
-    -webkit-transform: none !important;
     transform: none !important;
 }
 
@@ -250,7 +214,6 @@
 :not(.isR2L).layout-magazine.transition-magazine .page.prev:nth-child(odd),
 .isR2L.layout-magazine.transition-magazine .page.after:nth-child(even),
 .isR2L.layout-magazine.transition-magazine .page.next:nth-child(even) {
-    -webkit-transform: rotateY(-180deg);
     transform: rotateY(-180deg);
     z-index: 3;
 }
@@ -259,15 +222,17 @@
 :not(.isR2L).layout-magazine.transition-magazine .page.next:nth-child(even),
 .isR2L.layout-magazine.transition-magazine .page.before:nth-child(odd),
 .isR2L.layout-magazine.transition-magazine .page.prev:nth-child(odd){
-    -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
     z-index: 3;
 }
 
 .layout-magazine.transition-magazine .page.prev,
 .layout-magazine.transition-magazine .page.next {
-    visibility: visible;
+    /* Delay transitioning the visibility until after the transform duration (0.5s) */
+    transition: transform 0.5s, visibility 0s linear 0.5s;
 }
 .layout-magazine.transition-magazine .page.current {
+    /* Transition the visibility immediately, and transform over 0.5s */
+    transition: visibility 0s, transform 0.5s;
     z-index: 2;
 }

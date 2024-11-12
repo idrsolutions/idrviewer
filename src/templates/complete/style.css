@@ -320,6 +320,7 @@ body:not(:fullscreen) .icon-fullscreen-exit {
 
     width: 288px;
     height: 30px;
+    min-height: 0; /* Workaround for Firefox bug #1926015 */
     margin: 20px auto 10px;
     border-radius: 5px;
     border: 1px solid #666;
