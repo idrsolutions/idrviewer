@@ -28,14 +28,6 @@ body {
     box-shadow: 1px 1px 4px rgba(120, 120, 120, 0.5);
 }
 
-/* Shared utilities */
-.is-mobile .mobile-hidden {
-    display: none;
-}
-.hidden {
-    display: none;
-}
-
 /* Menu bars */
 #controls {
     height: 45px;
@@ -404,4 +396,12 @@ body:not(:fullscreen) .icon-fullscreen-exit {
     #idrviewer { overflow: visible; }
     .page { box-shadow: none; }
     .page:not([data-state="loaded"]) { display: none; }
+}
+
+/* Shared utilities */
+.is-mobile .mobile-hidden {
+    display: none;
+}
+.hidden {
+    display: none;
 }
