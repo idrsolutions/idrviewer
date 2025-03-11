@@ -234,7 +234,7 @@
                     background.setAttribute("data", URL + currentSrc);
                 } else {
                     currentSrc = background.getAttribute("src");
-                    if (currentSrc && currentSrc.indexOf("base64") === -1) {
+                    if (currentSrc && !currentSrc.startsWith("data:")) {
                         background.setAttribute("src", URL + currentSrc);
                     }
                 }

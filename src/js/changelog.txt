@@ -1,6 +1,10 @@
 IDRViewer Changelog
 -------------------
 
+1.22.0 (11 Mar 2025)
+- Add compatibility with the URL setting and non-base64 data: URI page backgrounds
+- Update dev dependencies
+
 1.21.10 (28 Jan 2025)
 - Update dev dependencies
 
