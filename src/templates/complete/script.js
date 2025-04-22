@@ -99,6 +99,7 @@
         const Sidebar = {},
             panels = {};
         let sidebar,
+            sidebarToggleBtn,
             defaultPanel,
             currentPanel;
 
@@ -109,8 +110,10 @@
         };
 
         IDRViewer.on('ready', function (data) {
-            d('btnSideToggle').addEventListener('click', Sidebar.toggleSidebar);
+            sidebarToggleBtn = d('btnSideToggle');
             sidebar = d('sidebar');
+
+            sidebarToggleBtn.addEventListener('click', Sidebar.toggleSidebar);
 
             for (let prop in panels) {
                 panels[prop].setup(data);
@@ -118,6 +121,7 @@
             }
             currentPanel = defaultPanel;
 
+            sidebar.ariaHidden = "true";
             setSidebarNavTabIndex("-1");
         });
 
@@ -148,10 +152,14 @@
          */
         Sidebar.toggleSidebar = function () {
             if (ClassHelper.toggleClass(document.body, 'sidebar-open')) {
+                sidebarToggleBtn.ariaExpanded = "true";
+                sidebar.ariaHidden = "false";
                 setSidebarNavTabIndex("0");
                 panels[currentPanel].show();
             } else {
                 panels[currentPanel].hide();
+                sidebarToggleBtn.ariaExpanded = "false";
+                sidebar.ariaHidden = "true";
                 setSidebarNavTabIndex("-1");
             }
         };
@@ -246,8 +254,8 @@
         };
 
         const setNextPrevButtonsDisabled = function (disable) {
-            highlightNextBtn.disabled = disable;
-            highlightPrevBtn.disabled = disable;
+            highlightNextBtn.ariaDisabled = String(disable);
+            highlightPrevBtn.ariaDisabled = String(disable);
         };
 
         const doSearch = function () {
@@ -293,7 +301,7 @@
             setup: setup,
             show: function () {
                 ClassHelper.removeClass(searchPanel, 'hidden');
-                ClassHelper.addClass(searchBtn, 'disabled');
+                searchBtn.ariaSelected = "true";
 
                 const loadListener = function (loaded) {
                     if (loaded) {
@@ -315,7 +323,7 @@
             },
             hide: function () {
                 ClassHelper.addClass(searchPanel, 'hidden');
-                ClassHelper.removeClass(searchBtn, 'disabled');
+                searchBtn.ariaSelected = "false";
             }
         });
     })();
@@ -346,6 +354,8 @@
 
             thumbnailPanel = d('thumbnails-panel');
             thumbnailPanel.addEventListener('scroll', handleThumbnailBarScroll);
+
+            new ResizeObserver(handleThumbnailBarScroll).observe(thumbnailPanel);
 
             curPg = data.page;
             pgCount = data.pagecount;
@@ -404,7 +414,7 @@
             if (thumbnailTimeout) {
                 clearTimeout(thumbnailTimeout);
             }
-            thumbnailTimeout = setTimeout(loadVisibleThumbnails, 500);
+            thumbnailTimeout = setTimeout(loadVisibleThumbnails, 250);
         };
 
         const showVisibleSpinners = function () {
@@ -462,7 +472,7 @@
                 ClassHelper.addClass(curThumb, 'currentPageThumbnail');
 
                 if (scrollSidebar) {
-                    thumbnailPanel.scrollTop = thumbnailPanel.scrollTop + curThumb.getBoundingClientRect().top - thumbnailPanel.getBoundingClientRect().top;
+                    curThumb.scrollIntoView();
                 }
             }
         };
@@ -471,7 +481,7 @@
             setup: setup,
             show: function () {
                 ClassHelper.removeClass(thumbnailPanel, 'hidden');
-                ClassHelper.addClass(thumbnailBtn, 'disabled');
+                thumbnailBtn.ariaSelected = "true";
 
                 setTimeout(showVisibleSpinners, 250);
                 loadVisibleThumbnails();
@@ -479,7 +489,7 @@
             },
             hide: function () {
                 ClassHelper.addClass(thumbnailPanel, 'hidden');
-                ClassHelper.removeClass(thumbnailBtn, 'disabled');
+                thumbnailBtn.ariaSelected = "false";
             }
         }, true);
     })();
@@ -562,11 +572,11 @@
             setup: setup,
             show: function () {
                 ClassHelper.removeClass(bookmarkPanel, 'hidden');
-                ClassHelper.addClass(bookmarkBtn, 'disabled');
+                bookmarkBtn.ariaSelected = "true";
             },
             hide: function () {
                 ClassHelper.addClass(bookmarkPanel, 'hidden');
-                ClassHelper.removeClass(bookmarkBtn, 'disabled');
+                bookmarkBtn.ariaSelected = "false";
             }
         });
     })();
@@ -653,16 +663,8 @@
             pgCountEle.innerText = getPageString(data.page, data.pagecount);
             goBtn.selectedIndex = data.page - 1;
 
-            if (data.isFirstPage) {
-                ClassHelper.addClass(prevBtn, 'disabled');
-            } else {
-                ClassHelper.removeClass(prevBtn, 'disabled');
-            }
-            if (data.isLastPage) {
-                ClassHelper.addClass(nextBtn, 'disabled');
-            } else {
-                ClassHelper.removeClass(nextBtn, 'disabled');
-            }
+            prevBtn.ariaDisabled = String(data.isFirstPage);
+            nextBtn.ariaDisabled = String(data.isLastPage);
         };
 
         IDRViewer.on('ready', function (data) {
@@ -675,12 +677,8 @@
             prevBtn = d('btnPrev');
             nextBtn = d('btnNext');
 
-            if (data.isFirstPage) {
-                ClassHelper.addClass(prevBtn, 'disabled');
-            }
-            if (data.isLastPage) {
-                ClassHelper.addClass(nextBtn, 'disabled');
-            }
+            prevBtn.ariaDisabled = String(data.isFirstPage);
+            nextBtn.ariaDisabled = String(data.isLastPage);
 
             goBtn.addEventListener('change', handleGoBtn);
             prevBtn.addEventListener('click', function (e) { IDRViewer.prev(); e.preventDefault(); });
@@ -712,16 +710,8 @@
             zoomBtn.value = data.zoomType;
             zoomBtn.options[0].innerText = Math.floor(data.zoomValue * 100) + '%';
 
-            if (data.isMinZoom) {
-                ClassHelper.addClass(zoomOutBtn, 'disabled');
-            } else {
-                ClassHelper.removeClass(zoomOutBtn, 'disabled');
-            }
-            if (data.isMaxZoom) {
-                ClassHelper.addClass(zoomInBtn, 'disabled');
-            } else {
-                ClassHelper.removeClass(zoomInBtn, 'disabled');
-            }
+            zoomOutBtn.ariaDisabled = String(data.isMinZoom);
+            zoomInBtn.ariaDisabled = String(data.isMaxZoom);
         };
 
         const handleZoomBtn = function () {
@@ -828,12 +818,12 @@
         const updateSelectionButtons = function (mode) {
             switch (mode) {
                 case IDRViewer.SELECT_PAN:
-                    ClassHelper.removeClass(selectBtn, 'disabled');
-                    ClassHelper.addClass(moveBtn, 'disabled');
+                    selectBtn.ariaChecked = "false";
+                    moveBtn.ariaChecked = "true";
                     break;
                 case IDRViewer.SELECT_SELECT:
-                    ClassHelper.removeClass(moveBtn, 'disabled');
-                    ClassHelper.addClass(selectBtn, 'disabled');
+                    moveBtn.ariaChecked = "false";
+                    selectBtn.ariaChecked = "true";
                     break;
             }
         };

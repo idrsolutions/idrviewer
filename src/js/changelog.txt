@@ -1,6 +1,10 @@
 IDRViewer Changelog
 -------------------
 
+1.23.0 (22 Apr 2025)
+- Fix page backgrounds improperly being part of the screen reader tree
+- Update dev dependencies
+
 1.22.0 (11 Mar 2025)
 - Add compatibility with the URL setting and non-base64 data: URI page backgrounds
 - Update dev dependencies

@@ -1,6 +1,15 @@
 Complete UI Changelog
 ---------------------
 
+4.0.0 (22 Apr 2025)
+- Various accessibility improvements including enhanced screen reader compatibility
+- Updated CSS to use variables for colors, simplifying theme customization
+- Updated light and dark theme color schemes
+- Added dark theme styling in the sidebar
+- Updated nav icons so that selected and disabled states are visually distinct
+- Fixed Android system navigation bar appearing light in dark mode
+- Fixed thumbnails not loading when made visible by viewport resize
+
 3.3.5 (17 Dec 2024)
 - Fixed fullscreen button incorrectly appearing when it's not available (on iPhone)
 

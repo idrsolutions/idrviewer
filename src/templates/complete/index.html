@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- v3.3.5 -->
+<!-- v4.0.0 -->
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,22 +14,26 @@
     <div id="main">
         <nav id="controls" class="controls">
             <div id="controls-left">
-                <button id="btnSideToggle" data-lang-title="control.sidebar" title="Sidebar" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M185.087 870.913h138.522V281.087H185.087v589.826Zm218.305 0h371.521V281.087H403.392v589.826Zm-79.783 0H185.087h138.522Zm-217.74 79.218V201.304h748.827v748.827H105.869Z"/></svg></button>
+                <button id="btnSideToggle" data-lang-title="control.sidebar" title="Sidebar" class="btn" aria-expanded="false" aria-controls="sidebar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M185.087 870.913h138.522V281.087H185.087v589.826Zm218.305 0h371.521V281.087H403.392v589.826Zm-79.783 0H185.087h138.522Zm-217.74 79.218V201.304h748.827v748.827H105.869Z"/></svg></button>
             </div>
 
             <div id="controls-center">
                 <button id="btnPrev" data-lang-title="control.prev" title="Previous Page" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg></button>
-                <select id="btnGo">
+                <select id="btnGo" aria-label="Select Page">
 
                 </select>
-                <span id="pgCount"></span>
+                <span id="pgCount" aria-label="Page Count"></span>
                 <button id="btnNext" data-lang-title="control.next" title="Next Page" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></button>
 
-                <button id="btnSelect" data-lang-title="control.select" title="Select" class="btn mobile-hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M436.739 963.132v-79.784h88.087v79.784h-88.087Zm0-695.045v-79.219h88.087v79.219h-88.087Zm175.087 695.045v-79.784h88.087v79.784h-88.087Zm0-695.045v-79.219h88.087v79.219h-88.087Zm176.087 695.045v-79.784h79.219v79.784h-79.219Zm0-167.784v-88.087h79.219v88.087h-79.219Zm0-176.087v-88.087h79.219v88.087h-79.219Zm0-175.087v-88.087h79.219v88.087h-79.219Zm0-176.087v-79.219h79.219v79.219h-79.219ZM92.868 963.132v-79.784h88.826V268.087H92.868v-79.219H348.74v79.219h-87.826v615.261h87.826v79.784H92.869Z"/></svg></button>
-                <button id="btnMove" title="Pan" data-lang-title="control.move" class="btn mobile-hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 2 12 5 15"></polyline><polyline points="9 5 12 2 15 5"></polyline><polyline points="15 19 12 22 9 19"></polyline><polyline points="19 9 22 12 19 15"></polyline><line x1="2" y1="12" x2="22" y2="12"></line><line x1="12" y1="2" x2="12" y2="22"></line></svg></button>
+                <div class="separator mobile-hidden"></div>
+                <div role="radiogroup" class="mobile-hidden">
+                    <button id="btnSelect" role="radio" data-lang-title="control.select" title="Select" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960"><path d="M436.739 963.132v-79.784h88.087v79.784h-88.087Zm0-695.045v-79.219h88.087v79.219h-88.087Zm175.087 695.045v-79.784h88.087v79.784h-88.087Zm0-695.045v-79.219h88.087v79.219h-88.087Zm176.087 695.045v-79.784h79.219v79.784h-79.219Zm0-167.784v-88.087h79.219v88.087h-79.219Zm0-176.087v-88.087h79.219v88.087h-79.219Zm0-175.087v-88.087h79.219v88.087h-79.219Zm0-176.087v-79.219h79.219v79.219h-79.219ZM92.868 963.132v-79.784h88.826V268.087H92.868v-79.219H348.74v79.219h-87.826v615.261h87.826v79.784H92.869Z"/></svg></button>
+                    <button id="btnMove" role="radio" data-lang-title="control.move" title="Pan" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 2 12 5 15"></polyline><polyline points="9 5 12 2 15 5"></polyline><polyline points="15 19 12 22 9 19"></polyline><polyline points="19 9 22 12 19 15"></polyline><line x1="2" y1="12" x2="22" y2="12"></line><line x1="12" y1="2" x2="12" y2="22"></line></svg></button>
+                </div>
+                <div class="separator mobile-hidden"></div>
 
                 <button id="btnZoomOut" data-lang-title="control.zoom-out" title="Zoom Out" class="btn mobile-hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg></button>
-                <select id="btnZoom" class="mobile-hidden">
+                <select id="btnZoom" class="mobile-hidden" aria-label="Set Zoom">
                     <option value="specific">100%</option>
                     <option data-lang-text="control.actual-size" value="actualsize">Actual Size</option>
                     <option data-lang-text="control.fit-width" value="fitwidth">Fit Width</option>
@@ -38,7 +42,8 @@
                     <option data-lang-text="control.auto" value="auto">Automatic</option>
                 </select>
                 <button id="btnZoomIn" data-lang-title="control.zoom-in" title="Zoom In" class="btn mobile-hidden"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
-                <select id="btnView" class="mobile-hidden">
+                <div class="separator mobile-hidden"></div>
+                <select id="btnView" class="mobile-hidden" aria-label="Set Layout">
 
                 </select>
             </div>
@@ -56,14 +61,16 @@
 
         <nav id="sidebar">
             <div id="sidebar-controls" class="controls">
-                <button id="btnThumbnails" data-lang-title="control.thumbnails" title="Thumbnails" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20 4v12H8V4h12m0-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 9.67l1.69 2.26 2.48-3.1L19 15H9zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg></button>
-                <button id="btnBookmarks" data-lang-title="control.bookmarks" title="Bookmarks" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/></svg></button>
-                <button id="btnSearch" data-lang-title="control.search" title="Search" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
+                <div id="sidebar-tablist" role="tablist">
+                    <button id="btnThumbnails" role="tab" aria-controls="thumbnails-panel" data-lang-title="control.thumbnails" title="Thumbnails" aria-label="Thumbnails" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20 4v12H8V4h12m0-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 9.67l1.69 2.26 2.48-3.1L19 15H9zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg></button>
+                    <button id="btnBookmarks" role="tab" aria-controls="bookmarks-panel" data-lang-title="control.bookmarks" title="Bookmarks" aria-label="Bookmarks" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/></svg></button>
+                    <button id="btnSearch" role="tab" aria-controls="search-panel" data-lang-title="control.search" title="Search" aria-label="Search" class="btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
+                </div>
             </div>
             <div id="sidebar-content">
-                <div id="thumbnails-panel"></div>
-                <div id="bookmarks-panel"></div>
-                <div id="search-panel">
+                <div id="thumbnails-panel" role="tabpanel" aria-labelledby="btnThumbnails" class="sidebar-panel"></div>
+                <div id="bookmarks-panel" role="tabpanel" aria-labelledby="btnBookmarks" class="sidebar-panel"></div>
+                <div id="search-panel" role="tabpanel" aria-labelledby="btnSearch" class="sidebar-panel">
                     <div class="search-head-wrap">
                         <div class="search-input-wrap">
                             <input id="searchInput" data-lang-title="search.search" title="Search" type="text">

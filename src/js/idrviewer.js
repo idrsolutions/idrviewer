@@ -222,6 +222,7 @@
 
             const background = pageElement.querySelector('#pdf' + page);
             background.setAttribute("tabindex", "-1"); // Prevent object element appearing in tab order
+            background.ariaHidden = "true";
 
             const externalBackground = background.getAttribute("data") || background.getAttribute("src");
             if (externalBackground) {
