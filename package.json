@@ -1,6 +1,6 @@
 {
   "name": "idrviewer",
-  "version": "1.23.0",
+  "version": "1.23.1",
   "description": "The IDRViewer is a viewer designed for documents converted using BuildVu",
   "keywords": [
     "idrsolutions",
@@ -45,7 +45,7 @@
     "http-server": "^14.1.1",
     "jshint": "^2.13.6",
     "playwright": "^1.52.0",
-    "webpack": "^5.99.6",
+    "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1"
   }
 }

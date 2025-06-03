@@ -1,6 +1,9 @@
 IDRViewer Changelog
 -------------------
 
+1.23.1 (03 Jun 2025)
+- Update dev dependencies
+
 1.23.0 (22 Apr 2025)
 - Fix page backgrounds improperly being part of the screen reader tree
 - Update dev dependencies
