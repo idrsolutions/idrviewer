@@ -1,6 +1,10 @@
 Complete UI Changelog
 ---------------------
 
+4.0.1 (15 Jul 2025)
+- Fixed sidebar thumbnails not displayed in Safari
+- Fixed the sidebar border being visible on the left side of the screen when the sidebar is closed
+
 4.0.0 (22 Apr 2025)
 - Various accessibility improvements including enhanced screen reader compatibility
 - Updated CSS to use variables for colors, simplifying theme customization

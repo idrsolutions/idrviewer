@@ -196,6 +196,8 @@ body:not(:fullscreen) .icon-fullscreen-exit {
     z-index: 999;
     left: -350px;
     width: 350px;
+    box-sizing: border-box;
+    border-right: 1px solid var(--border-color);
 }
 .sidebar-open #sidebar {
     left: 0;
@@ -224,20 +226,28 @@ body:not(:fullscreen) .icon-fullscreen-exit {
     -webkit-overflow-scrolling: touch;
     height: 100%;
 }
-#sidebar {
-    border-right: 1px solid var(--border-color);
-}
 
 /* Thumbnails panel */
+#thumbnails-panel {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+}
 .thumbnail {
-    display: table;
-    margin: 8px auto;
     scroll-margin: 8px;
 }
+.thumbnail:first-child {
+    margin-top: 4px;
+}
+.thumbnail:last-child {
+    margin-bottom: 4px;
+}
 .thumbnail img {
+    display: block;
     max-width: 160px;
     max-height: 100%;
     border: 1px solid var(--border-color);
+    box-sizing: border-box;
 }
 .currentPageThumbnail img, .thumbnail:hover img {
     outline: 3px solid var(--btn-bg-hover-color);
