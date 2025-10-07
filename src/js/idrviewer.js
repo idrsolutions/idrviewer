@@ -68,6 +68,8 @@
             page.id = 'page' + i;
             page.setAttribute('style', 'width: ' + bounds[i - 1][0] + 'px; height: ' + bounds[i - 1][1] + 'px;');
             page.className = "page";
+            page.role = "region";
+            page.ariaLabel = `Page ${i}`;
             pageContainer.appendChild(page);
             pages[i] = page;
         }

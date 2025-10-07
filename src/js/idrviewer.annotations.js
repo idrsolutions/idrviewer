@@ -432,7 +432,6 @@
             const downloadLink = document.createElement("a");
             downloadLink.href = (config.url || "") + data.action.media.src;
             if (data.action.media.filename) {
-                console.log(JSON.stringify(data.action.media));
                 downloadLink.download = data.action.media.filename;
             }
             downloadLink.target = "_blank";
