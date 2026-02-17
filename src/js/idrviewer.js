@@ -334,7 +334,6 @@
             timer,
             numLoading = 0,
             numLoaded = 0,
-            numHidden = 0,
             numUnloaded;
 
         exports.setup = function() {
@@ -360,9 +359,6 @@
                 case PageStates.LOADED:
                     numLoaded--;
                     break;
-                case PageStates.HIDDEN:
-                    numHidden--;
-                    break;
                 case PageStates.UNLOADED:
                     numUnloaded--;
                     break;
@@ -373,9 +369,6 @@
                     break;
                 case PageStates.LOADED:
                     numLoaded++;
-                    break;
-                case PageStates.HIDDEN:
-                    numHidden++;
                     break;
                 case PageStates.UNLOADED:
                     numUnloaded++;
@@ -600,7 +593,6 @@
         };
 
         Presentation.unload = function() {
-            /*jshint loopfunc: true */
             for (let i = 1; i <= pgCount; i++) {
                 pages[i].style.marginLeft = "";
                 pages[i].style.marginTop = "";
@@ -631,7 +623,6 @@
         };
 
         const updateClasses = function(pg) {
-            /*jshint loopfunc: true */
             for (let i = 1; i <= pgCount; i++) {
                 ClassHelper.removeClass(pages[i], 'current', 'prev', 'next', 'before', 'after');
                 delete pages[i].dataset.visible;
@@ -729,7 +720,6 @@
         };
 
         Magazine.unload = function() {
-            /*jshint loopfunc: true */
             for (let i = 1; i <= pgCount; i++) {
                 pages[i].style.marginLeft = "";
                 pages[i].style.marginTop = "";
@@ -761,7 +751,6 @@
         };
 
         const updateClasses = function(pg) {
-            /*jshint loopfunc: true */
             for (let i = 1; i <= pgCount; i++) {
                 ClassHelper.removeClass(pages[i], 'current', 'prev', 'next', 'before', 'after');
                 delete pages[i].dataset.visible;
@@ -1431,6 +1420,7 @@
         };
     })();
 
+    /* global define, module */
     if(typeof define === "function" && define.amd) {
         //noinspection JSUnresolvedFunction
         define(['idrviewer'], [], function() {

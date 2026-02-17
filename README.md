@@ -35,9 +35,9 @@ See [Annotations JSON API](https://support.idrsolutions.com/buildvu/api-document
 2. Open terminal/command prompt & cd into idrviewer
 3. Run `npm install`
 4. To run the tasks, run `npm run <taskname>` where `<taskname>` is one of the following:
-   - 'jshint' is for running static analysis on the JavaScript files.
+   - 'lint' is for running static analysis on the JavaScript files.
    - 'playwright' is for running the automated IDRViewer tests (in /src/test/)
-   - 'test' is for jshint and playwright tests
+   - 'test' is for linting and playwright tests
    - 'webpack' is for building the UIs
    - 'webpack-watch' is for building the UIs and watching for changes
 

@@ -74,8 +74,6 @@
         request.send();
     };
 
-    let resultsLimit;
-
     IDRViewer.search = function(searchTerm, matchCase, limitOnePerPage, decomposeSnippets = false) {
         if (!textContent) {
             throw new Error("Search not loaded. loadSearch() must be called first.");
@@ -110,7 +108,7 @@
                         }
                         results.push(result);
                     }
-                } while (!limitOnePerPage && index !== -1 && (!resultsLimit || results.length < resultsLimit));
+                } while (!limitOnePerPage && index !== -1);
             }
         }
 
