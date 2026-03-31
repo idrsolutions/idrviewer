@@ -1,6 +1,9 @@
 IDRViewer Changelog
 -------------------
 
+1.24.4 (31 Mar 2026)
+- Update dev dependencies
+
 1.24.3 (17 Feb 2026)
 - Replace jshint with eslint
 - Update dev dependencies
