@@ -444,3 +444,172 @@ test.describe("selectchange listener", () => {
         expect(data.type, "Select mode is not select").toEqual("select");
     });
 });
+
+test.describe("rotationchange listener", () => {
+    test("rotate clockwise (90 degrees)", async ({page}) => {
+        const data = await page.evaluate(() => {
+            return new Promise(resolve => {
+                const fallback = setTimeout(() => {
+                    resolve();
+                }, 1000);
+
+                const event = (data) => {
+                    clearTimeout(fallback);
+                    IDRViewer.off("rotationchange", event);
+                    resolve(data);
+                };
+
+                IDRViewer.on("rotationchange", event);
+
+                IDRViewer.rotate(90);
+            });
+        });
+
+        expect(data, "rotate: rotationchange event failed to fire").not.toBeUndefined();
+        expect(data.rotation, "rotate: Failed to rotate to correct angle").toEqual(90);
+    });
+
+    test("rotate counter-clockwise normalises negative angles", async ({page}) => {
+        const data = await page.evaluate(() => {
+            return new Promise(resolve => {
+                const fallback = setTimeout(() => {
+                    resolve();
+                }, 1000);
+
+                const event = (data) => {
+                    clearTimeout(fallback);
+                    IDRViewer.off("rotationchange", event);
+                    resolve(data);
+                };
+
+                IDRViewer.setRotation(0);
+                IDRViewer.on("rotationchange", event);
+
+                IDRViewer.rotate(-90);
+            });
+        });
+
+        expect(data, "rotate: rotationchange event failed to fire").not.toBeUndefined();
+        expect(data.rotation, "rotate: Negative rotation not normalised to 0-360").toEqual(270);
+    });
+
+    test("setRotation to specific angle", async ({page}) => {
+        const data = await page.evaluate(() => {
+            return new Promise(resolve => {
+                const fallback = setTimeout(() => {
+                    resolve();
+                }, 1000);
+
+                const event = (data) => {
+                    clearTimeout(fallback);
+                    IDRViewer.off("rotationchange", event);
+                    resolve(data);
+                };
+
+                IDRViewer.on("rotationchange", event);
+
+                IDRViewer.setRotation(180);
+            });
+        });
+
+        expect(data, "setRotation: rotationchange event failed to fire").not.toBeUndefined();
+        expect(data.rotation, "setRotation: Failed to set correct angle").toEqual(180);
+    });
+
+    test("setRotation normalises angles greater than 360", async ({page}) => {
+        const data = await page.evaluate(() => {
+            return new Promise(resolve => {
+                const fallback = setTimeout(() => {
+                    resolve();
+                }, 1000);
+
+                const event = (data) => {
+                    clearTimeout(fallback);
+                    IDRViewer.off("rotationchange", event);
+                    resolve(data);
+                };
+
+                IDRViewer.on("rotationchange", event);
+
+                IDRViewer.setRotation(450);
+            });
+        });
+
+        expect(data, "setRotation: rotationchange event failed to fire").not.toBeUndefined();
+        expect(data.rotation, "setRotation: Angle not normalised to 0-360").toEqual(90);
+    });
+});
+
+test.describe("rotation input validation", () => {
+    const invalidValues = [
+        { value: 45, label: "non-multiples of 90" },
+        { value: "90", label: "strings" },
+        { value: NaN, label: "NaN" },
+        { value: Infinity, label: "Infinity" },
+        { value: undefined, label: "undefined" },
+        { value: null, label: "null" },
+        { value: false, label: "false" }
+    ];
+
+    for (const { value, label } of invalidValues) {
+        test(`setRotation rejects ${label}`, async ({page}) => {
+            const result = await page.evaluate((v) => {
+                try {
+                    IDRViewer.setRotation(v);
+                    return { threw: false };
+                } catch (e) {
+                    return { threw: true, name: e.name };
+                }
+            }, value);
+            expect(result.threw, "setRotation should throw").toBe(true);
+            expect(result.name, "setRotation should throw TypeError").toEqual("TypeError");
+        });
+
+        test(`rotate rejects ${label}`, async ({page}) => {
+            const result = await page.evaluate((v) => {
+                try {
+                    IDRViewer.rotate(v);
+                    return { threw: false };
+                } catch (e) {
+                    return { threw: true, name: e.name };
+                }
+            }, value);
+            expect(result.threw, "rotate should throw").toBe(true);
+            expect(result.name, "rotate should throw TypeError").toEqual("TypeError");
+        });
+    }
+
+    test("rotation state is unchanged after a rejected call", async ({page}) => {
+        const result = await page.evaluate(() => {
+            IDRViewer.setRotation(0);
+            let captured;
+            const listener = (data) => { captured = data.rotation; };
+            IDRViewer.on("rotationchange", listener);
+
+            let threw = false;
+            try {
+                IDRViewer.rotate(45);
+            } catch (e) {
+                threw = true;
+            }
+
+            IDRViewer.off("rotationchange", listener);
+
+            // A subsequent valid call should land on 90, not 135.
+            return new Promise(resolve => {
+                const fallback = setTimeout(() => resolve({ threw, captured, finalRotation: undefined }), 1000);
+                const event = (data) => {
+                    clearTimeout(fallback);
+                    IDRViewer.off("rotationchange", event);
+                    resolve({ threw, captured, finalRotation: data.rotation });
+                };
+                IDRViewer.on("rotationchange", event);
+                IDRViewer.rotate(90);
+            });
+        });
+
+        expect(result.threw, "rotate(45) should throw").toBe(true);
+        expect(result.captured, "Failed call should not fire rotationchange").toBeUndefined();
+        expect(result.finalRotation, "Subsequent rotate(90) should land on 90, proving state was untouched").toEqual(90);
+    });
+});

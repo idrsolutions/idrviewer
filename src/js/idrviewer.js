@@ -25,7 +25,8 @@
         bounds,
         paddingX,
         paddingY,
-        isSetup = false;
+        isSetup = false,
+        rotation = 0;
     const pages = [];
 
     IDR.setup = function (config) {
@@ -66,7 +67,7 @@
         for (let i = 1; i <= pgCount; i++) {
             const page = document.createElement('div');
             page.id = 'page' + i;
-            page.setAttribute('style', 'width: ' + bounds[i - 1][0] + 'px; height: ' + bounds[i - 1][1] + 'px;');
+            page.setAttribute('style', 'width: ' + getEffectiveBounds(i)[0] + 'px; height: ' + getEffectiveBounds(i)[1] + 'px;');
             page.className = "page";
             page.role = "region";
             page.ariaLabel = `Page ${i}`;
@@ -102,6 +103,19 @@
         }
         data.page = curPg;
         IDR.fire('ready', data);
+    };
+
+    /**
+     * Returns the bounding dimensions of a page after applying the current rotation.
+     *
+     * @param {number} page - 1-based page index.
+     * @returns {[number, number]} The page's effective `[width, height]` for the current rotation.
+     */
+    const getEffectiveBounds = function(page) {
+        if (rotation === 90 || rotation === 270) {
+            return [bounds[page - 1][1], bounds[page - 1][0]];
+        }
+        return bounds[page - 1];
     };
 
     const PageManager = (function() {
@@ -521,8 +535,8 @@
         exports.setup = function(isR2L) {
             isDirectionR2L = isR2L;
 
-            for (let i = 0; i < pgCount; i++) {
-                if (bounds[i][0] !== bounds[0][0] || bounds[i][1] !== bounds[0][1]) {
+            for (let i = 1; i <= pgCount; i++) {
+                if (getEffectiveBounds(i)[0] !== getEffectiveBounds(1)[0] || getEffectiveBounds(i)[1] !== getEffectiveBounds(1)[1]) {
                     allPagesSameSize = false;
                     break;
                 }
@@ -646,7 +660,7 @@
 
         Presentation.updateLayout = function() {
             const zoom = ZoomManager.getZoom();
-            const pageWidth = Math.floor(bounds[curPg - 1][0] * zoom);
+            const pageWidth = Math.floor(getEffectiveBounds(curPg)[0] * zoom);
             let marginLeft = 0;
             let viewPortWidth = mainContainer.clientWidth - (paddingX * 2);
             if (viewPortWidth > pageWidth) {
@@ -655,7 +669,7 @@
                 viewPortWidth = pageWidth;
             }
 
-            const pageHeight = Math.floor(bounds[curPg - 1][1] * zoom);
+            const pageHeight = Math.floor(getEffectiveBounds(curPg)[1] * zoom);
             let marginTop = 0;
             let viewPortHeight = mainContainer.clientHeight - (paddingY * 2);
             if (viewPortHeight > pageHeight) {
@@ -680,8 +694,8 @@
 
         Presentation.getZoomBounds = function() {
             return {
-                width: bounds[curPg - 1][0],
-                height: bounds[curPg - 1][1]
+                width: getEffectiveBounds(curPg)[0],
+                height: getEffectiveBounds(curPg)[1]
             };
         };
 
@@ -804,8 +818,8 @@
             const isTwoPages = isDoubleSpread(curPg);
             const zoom = ZoomManager.getZoom();
 
-            const getPageWidth = page => Math.floor(bounds[page - 1][0] * zoom);
-            const getPageHeight = page => Math.floor(bounds[page - 1][1] * zoom);
+            const getPageWidth = page => Math.floor(getEffectiveBounds(page)[0] * zoom);
+            const getPageHeight = page => Math.floor(getEffectiveBounds(page)[1] * zoom);
 
             // Calculate viewPortWidth
             const pageWidthA = getPageWidth(curPg);
@@ -844,10 +858,10 @@
 
         Magazine.getZoomBounds = function() {
             const isTwoPages = isDoubleSpread(curPg);
-            const pageWidthA = Math.floor(bounds[curPg - 1][0]);
-            const pageWidthB = isTwoPages ? Math.floor(bounds[curPg][0]) : 0;
-            const pageHeightA = Math.floor(bounds[curPg - 1][1]);
-            const pageHeightB = isTwoPages ? Math.floor(bounds[curPg][1]) : 0;
+            const pageWidthA = Math.floor(getEffectiveBounds(curPg)[0]);
+            const pageWidthB = isTwoPages ? Math.floor(getEffectiveBounds(curPg + 1)[0]) : 0;
+            const pageHeightA = Math.floor(getEffectiveBounds(curPg)[1]);
+            const pageHeightB = isTwoPages ? Math.floor(getEffectiveBounds(curPg + 1)[1]) : 0;
             return {
                 width: 2 * Math.max(pageWidthA, pageWidthB),
                 height: Math.max(pageHeightA, pageHeightB)
@@ -966,11 +980,11 @@
                         offset = Number(locationArr[1]);
                         break;
                 }
-                if (isNaN(offset) || offset < 0 || offset > bounds[pg - 1][1]) {
+                if (isNaN(offset) || offset < 0 || offset > getEffectiveBounds(pg)[1]) {
                     offset = 0;
                 }
                 if (offset !== 0) {
-                    offset = bounds[pg - 1][1] - offset;
+                    offset = getEffectiveBounds(pg)[1] - offset;
                 }
             }
 
@@ -993,9 +1007,10 @@
         };
 
         Continuous.getZoomBounds = function() {
+            const swap = rotation === 90 || rotation === 270;
             return {
-                width: largestWidth,
-                height: largestHeight
+                width: swap ? largestHeight : largestWidth,
+                height: swap ? largestWidth : largestHeight
             };
         };
 
@@ -1151,16 +1166,26 @@
         };
 
         const setTransform = function(element, x, y, scale, hardwareAccelerate) {
+            let rotateStr = "";
+            if (rotation === 90) {
+                rotateStr = " rotate(90deg) translate(0%, -100%)";
+            } else if (rotation === 180) {
+                rotateStr = " rotate(180deg) translate(-100%, -100%)";
+            } else if (rotation === 270) {
+                rotateStr = " rotate(270deg) translate(-100%, 0%)";
+            }
+
             let transform;
             if (hardwareAccelerate) {
-                transform = "translate3d(" + x + "px, " + y + "px, 0) scale(" + scale + ")";
+                transform = "translate3d(" + x + "px, " + y + "px, 0) scale(" + scale + ")" + rotateStr;
             } else {
-                transform = "translateX(" + x + "px) translateY(" + y + "px) scale(" + scale + ")";
+                transform = "translateX(" + x + "px) translateY(" + y + "px) scale(" + scale + ")" + rotateStr;
             }
 
             return "-webkit-transform: " + transform + ";\n" +
                 "-ms-transform: " + transform + ";\n" +
-                "transform: " + transform + ";";
+                "transform: " + transform + ";\n" +
+                "transform-origin: top left;";
         };
 
         const updateZoom = function(value) {
@@ -1196,9 +1221,9 @@
             const transform = setTransform(null, 0, 0, zoom, false);
             lastRulePosition = styleSheet.insertRule(".page-inner { \n" + transform + "\n}", styleSheet.cssRules.length);
 
-            for (let i = 0; i < pgCount; i++) {
-                pages[i + 1].style.width = Math.floor(bounds[i][0] * zoom) + "px";
-                pages[i + 1].style.height = Math.floor(bounds[i][1] * zoom) + "px";
+            for (let i = 1; i <= pgCount; i++) {
+                pages[i].style.width = Math.floor(getEffectiveBounds(i)[0] * zoom) + "px";
+                pages[i].style.height = Math.floor(getEffectiveBounds(i)[1] * zoom) + "px";
             }
 
             mainContainer.scrollTop = mainContainer.scrollHeight * scrollRatio;
@@ -1360,6 +1385,39 @@
 
     IDR.updateLayout = function() {
         ZoomManager.updateZoom();
+    };
+
+    /**
+     * Sets the page rotation to an absolute angle.
+     *
+     * If called before setup, the value is stored and applied during the initial render.
+     * If called after setup, the layout is re-rendered and a `rotationchange` event is fired.
+     *
+     * @param {number} degrees - The target rotation in degrees. Must be a finite multiple of 90.
+     * @throws {TypeError} If `degrees` is not a finite number that is a multiple of 90.
+     */
+    IDR.setRotation = function(degrees) {
+        if (typeof degrees !== "number" || !Number.isFinite(degrees) || degrees % 90 !== 0) {
+            throw new TypeError("Rotation must be a multiple of 90 degrees");
+        }
+        rotation = ((degrees % 360) + 360) % 360;
+        if (isSetup) {
+            ZoomManager.updateZoom();
+            IDR.fire('rotationchange', { rotation: rotation });
+        }
+    };
+
+    /**
+     * Rotates the page by an angle relative to the current rotation.
+     *
+     * @param {number} delta - The rotation delta in degrees. Must be a finite multiple of 90.
+     * @throws {TypeError} If `delta` is not a finite number that is a multiple of 90.
+     */
+    IDR.rotate = function(delta) {
+        if (typeof delta !== "number") {
+            throw new TypeError("Rotation must be a multiple of 90 degrees");
+        }
+        IDR.setRotation(rotation + delta);
     };
 
     /* EventManager */

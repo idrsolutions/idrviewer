@@ -455,6 +455,14 @@
     })();
 
     (function() {
+        const setAriaOwns = function(objref, annotation) {
+            const structElem = document.querySelector('[data-obj="' + objref + '"]');
+            if (structElem && "ariaOwnsElements" in Element.prototype) {
+                structElem.ariaOwnsElements = (structElem.ariaOwnsElements == null)
+                ? [annotation] : [annotation].concat(structElem.ariaOwnsElements);
+            }
+        };
+
         const createAnnotation = function(container, data, config) {
             const annotation = document.createElement("div");
             annotation.setAttribute("style", "position: absolute; pointer-events: auto; -webkit-user-select: none;");
@@ -464,6 +472,7 @@
             annotation.style.height = data.bounds[3] + "px";
             if (data.objref) {
                 annotation.dataset.objref = data.objref;
+                setAriaOwns(data.objref, annotation);
             }
 
             if (data.appearance) {

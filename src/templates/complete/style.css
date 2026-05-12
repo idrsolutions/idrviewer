@@ -154,7 +154,7 @@ body:not(:fullscreen) .icon-fullscreen-exit {
 }
 
 #btnSideToggle, #btnBookmarks, #btnSearch, #btnSelect { padding: 3px; }
-#btnThemeToggle, #btnThumbnails, #btnMove { padding: 4px; }
+#btnRotateCw, #btnThemeToggle, #btnThumbnails, #btnMove { padding: 4px; }
 #btnZoomOut, #btnZoomIn { padding: 1px; }
 
 .controls {

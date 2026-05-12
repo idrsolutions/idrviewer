@@ -1,6 +1,11 @@
 IDRViewer Changelog
 -------------------
 
+1.25.0 (12 May 2026)
+- Add control of page rotation
+- Update annotation handling to better integrate link annotations within the structured content accessibility tree
+- Update dev dependencies
+
 1.24.4 (31 Mar 2026)
 - Update dev dependencies
 
