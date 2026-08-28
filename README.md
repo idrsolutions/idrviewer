@@ -25,10 +25,10 @@ src/
 ```
 
 ## External IDRViewer API
-See [IDRViewer JavaScript API](https://support.idrsolutions.com/buildvu/api-documents/idrviewer-javascript-api).
+See [IDRViewer JavaScript API](https://www.idrsolutions.com/docs/buildvu/api-documents/idrviewer-javascript-api).
 
 ## Annotations JSON API
-See [Annotations JSON API](https://support.idrsolutions.com/buildvu/api-documents/annotations-json-api)
+See [Annotations JSON API](https://www.idrsolutions.com/docs/buildvu/api-documents/annotations-json-api)
 
 ## NPM Tasks
 1. Install [node.js](https://nodejs.org/)
