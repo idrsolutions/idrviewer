@@ -3,6 +3,10 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HtmlInlineScriptPlugin = require("html-inline-script-webpack-plugin");
 
 module.exports = {
+    mode: 'production',
+    experiments: {
+        html: false, // webpack 5.110+ would otherwise minify the HTML html-webpack-plugin emits
+    },
     entry: {
         complete: [
             './src/js/idrviewer.js',
