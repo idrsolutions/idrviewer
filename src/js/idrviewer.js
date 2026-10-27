@@ -1203,7 +1203,8 @@
                 isMinZoom = true;
             }
 
-            const scrollRatio = mainContainer.scrollTop / mainContainer.scrollHeight;
+            const scrollRatioX = mainContainer.scrollLeft / mainContainer.scrollWidth;
+            const scrollRatioY = mainContainer.scrollTop / mainContainer.scrollHeight;
 
             layout.updateLayout();
 
@@ -1226,7 +1227,8 @@
                 pages[i].style.height = Math.floor(getEffectiveBounds(i)[1] * zoom) + "px";
             }
 
-            mainContainer.scrollTop = mainContainer.scrollHeight * scrollRatio;
+            mainContainer.scrollLeft = mainContainer.scrollWidth * scrollRatioX;
+            mainContainer.scrollTop = mainContainer.scrollHeight * scrollRatioY;
 
             zoomCount++;
             if (zoomCount % 2 === 1) {
